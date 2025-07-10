@@ -13,15 +13,21 @@ import {
   Database,
   FileText,
   TrendingUp,
-  Waves
+  Waves,
+  Activity,
+  Zap
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const RF = () => {
   const [impedanceInputs, setImpedanceInputs] = useState({ z1: '', z2: '' });
   const [vswriteInputs, setVswriteInputs] = useState({ forward: '', reflected: '' });
   const [frequencyInputs, setFrequencyInputs] = useState({ frequency: '', wavelength: '' });
+  const [noiseInputs, setNoiseInputs] = useState({ signal: '', noise: '' });
+  const [pathLossInputs, setPathLossInputs] = useState({ frequency: '', distance: '' });
+  const [antennaInputs, setAntennaInputs] = useState({ frequency: '', length: '' });
 
   const suppliers = [
     {
@@ -62,19 +68,44 @@ const RF = () => {
   ];
 
   const standards = [
-    { name: "IEEE 802.11", description: "Wireless LAN standards and protocols" },
-    { name: "3GPP TS 36", description: "LTE and 5G technical specifications" },
-    { name: "MIL-STD-461", description: "EMC requirements for military systems" },
-    { name: "FCC Part 15", description: "Radio frequency device regulations" },
-    { name: "ETSI EN 300", description: "European telecommunications standards" }
+    { name: "IEEE 802.11", description: "Wireless LAN standards and protocols", pdf: "https://standards.ieee.org/ieee/802.11/7028/" },
+    { name: "3GPP TS 36", description: "LTE and 5G technical specifications", pdf: "https://www.3gpp.org/ftp/Specs/archive/36_series/" },
+    { name: "MIL-STD-461", description: "EMC requirements for military systems", pdf: "https://www.iec.ch/standardsdev/resources/docstore/publication/Redline_versions/iec61000-6-4%7Bed2.0%7Den_d.pdf" },
+    { name: "FCC Part 15", description: "Radio frequency device regulations", pdf: "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-15" },
+    { name: "ETSI EN 300", description: "European telecommunications standards", pdf: "https://www.etsi.org/standards" }
   ];
 
   const recentArticles = [
-    { title: "5G mmWave Antenna Design", source: "Microwave Journal", time: "30 min ago" },
-    { title: "GaN Power Amplifier Efficiency", source: "RF Design", time: "2 hours ago" },
-    { title: "Phased Array Beamforming", source: "IEEE Microwave Magazine", time: "4 hours ago" },
-    { title: "RF Filter Design Techniques", source: "All About Circuits", time: "6 hours ago" },
-    { title: "Satellite Communication Trends", source: "Via Satellite", time: "8 hours ago" }
+    { 
+      title: "5G mmWave Antenna Design", 
+      source: "Microwave Journal", 
+      time: "30 min ago",
+      summary: "Latest advances in 28GHz and 39GHz antenna arrays for massive MIMO applications, including beamforming algorithms and thermal management solutions."
+    },
+    { 
+      title: "GaN Power Amplifier Efficiency", 
+      source: "RF Design", 
+      time: "2 hours ago",
+      summary: "Breakthrough GaN-on-SiC PA technology achieving 70% efficiency at 3.5GHz with digital pre-distortion for 5G base stations."
+    },
+    { 
+      title: "Phased Array Beamforming", 
+      source: "IEEE Microwave Magazine", 
+      time: "4 hours ago",
+      summary: "Advanced beamforming techniques for satellite communications using 64-element arrays with sub-degree pointing accuracy."
+    },
+    { 
+      title: "RF Filter Design Techniques", 
+      source: "All About Circuits", 
+      time: "6 hours ago",
+      summary: "Comparison of BAW vs SAW filter technologies for 5G applications, including insertion loss and spurious response analysis."
+    },
+    { 
+      title: "Satellite Communication Trends", 
+      source: "Via Satellite", 
+      time: "8 hours ago",
+      summary: "LEO constellation growth driving demand for Ka-band and V-band components with improved phase noise performance."
+    }
   ];
 
   const calculateImpedanceMatch = () => {
@@ -134,6 +165,56 @@ const RF = () => {
     }
   };
 
+  const calculateSNR = () => {
+    const signal = parseFloat(noiseInputs.signal);
+    const noise = parseFloat(noiseInputs.noise);
+    
+    if (signal && noise) {
+      const snr_linear = signal / noise;
+      const snr_db = 10 * Math.log10(snr_linear);
+      toast({
+        title: "SNR Calculation Result",
+        description: `SNR: ${snr_db.toFixed(2)} dB (${snr_linear.toFixed(2)} linear)`,
+      });
+    }
+  };
+
+  const calculatePathLoss = () => {
+    const freq = parseFloat(pathLossInputs.frequency); // MHz
+    const distance = parseFloat(pathLossInputs.distance); // km
+    
+    if (freq && distance) {
+      // Free space path loss formula
+      const fspl = 32.45 + 20 * Math.log10(freq) + 20 * Math.log10(distance);
+      toast({
+        title: "Path Loss Result",
+        description: `Free Space Path Loss: ${fspl.toFixed(2)} dB`,
+      });
+    }
+  };
+
+  const calculateAntennaLength = () => {
+    const freq = parseFloat(antennaInputs.frequency); // MHz
+    const length = parseFloat(antennaInputs.length); // meters
+    const c = 299.792458; // Speed of light in m/s * 1e6
+    
+    if (freq && !length) {
+      const wavelength = c / freq;
+      const quarterWave = wavelength / 4;
+      const halfWave = wavelength / 2;
+      toast({
+        title: "Antenna Length Result",
+        description: `λ/4: ${quarterWave.toFixed(3)} m, λ/2: ${halfWave.toFixed(3)} m`,
+      });
+    } else if (length && !freq) {
+      const frequency = c / (length * 4); // Assuming quarter wave
+      toast({
+        title: "Resonant Frequency",
+        description: `Quarter-wave resonance at: ${frequency.toFixed(2)} MHz`,
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -159,126 +240,236 @@ const RF = () => {
                   Essential RF and microwave engineering calculations
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Impedance Matching Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold flex items-center">
-                    <Radio className="mr-2 h-4 w-4" />
-                    Impedance Matching (L-Network)
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="z1">Source Z (Ω)</Label>
-                      <Input
-                        id="z1"
-                        type="number"
-                        value={impedanceInputs.z1}
-                        onChange={(e) => setImpedanceInputs({...impedanceInputs, z1: e.target.value})}
-                        placeholder="50"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="z2">Load Z (Ω)</Label>
-                      <Input
-                        id="z2"
-                        type="number"
-                        value={impedanceInputs.z2}
-                        onChange={(e) => setImpedanceInputs({...impedanceInputs, z2: e.target.value})}
-                        placeholder="75"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={calculateImpedanceMatch} className="w-full">
-                        Calculate Match
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="impedance">
+                    <AccordionTrigger className="flex items-center">
+                      <Radio className="mr-2 h-4 w-4" />
+                      Impedance Matching Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="z1">Source Z (Ω)</Label>
+                          <Input
+                            id="z1"
+                            type="number"
+                            value={impedanceInputs.z1}
+                            onChange={(e) => setImpedanceInputs({...impedanceInputs, z1: e.target.value})}
+                            placeholder="50"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="z2">Load Z (Ω)</Label>
+                          <Input
+                            id="z2"
+                            type="number"
+                            value={impedanceInputs.z2}
+                            onChange={(e) => setImpedanceInputs({...impedanceInputs, z2: e.target.value})}
+                            placeholder="75"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateImpedanceMatch} className="w-full">
+                            Calculate Match
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <Separator />
+                  <AccordionItem value="vswr">
+                    <AccordionTrigger className="flex items-center">
+                      <Waves className="mr-2 h-4 w-4" />
+                      VSWR & Return Loss Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="forward">Forward Power</Label>
+                          <Input
+                            id="forward"
+                            type="number"
+                            value={vswriteInputs.forward}
+                            onChange={(e) => setVswriteInputs({...vswriteInputs, forward: e.target.value})}
+                            placeholder="100"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="reflected">Reflected Power</Label>
+                          <Input
+                            id="reflected"
+                            type="number"
+                            value={vswriteInputs.reflected}
+                            onChange={(e) => setVswriteInputs({...vswriteInputs, reflected: e.target.value})}
+                            placeholder="5"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateVSWR} className="w-full">
+                            Calculate VSWR
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* VSWR Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold flex items-center">
-                    <Waves className="mr-2 h-4 w-4" />
-                    VSWR & Return Loss Calculator
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="forward">Forward Power</Label>
-                      <Input
-                        id="forward"
-                        type="number"
-                        value={vswriteInputs.forward}
-                        onChange={(e) => setVswriteInputs({...vswriteInputs, forward: e.target.value})}
-                        placeholder="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="reflected">Reflected Power</Label>
-                      <Input
-                        id="reflected"
-                        type="number"
-                        value={vswriteInputs.reflected}
-                        onChange={(e) => setVswriteInputs({...vswriteInputs, reflected: e.target.value})}
-                        placeholder="5"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={calculateVSWR} className="w-full">
-                        Calculate VSWR
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  <AccordionItem value="frequency">
+                    <AccordionTrigger>
+                      Frequency ↔ Wavelength Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="frequency">Frequency (MHz)</Label>
+                          <Input
+                            id="frequency"
+                            type="number"
+                            value={frequencyInputs.frequency}
+                            onChange={(e) => setFrequencyInputs({...frequencyInputs, frequency: e.target.value})}
+                            placeholder="2400"
+                          />
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="w-full mt-2" 
+                            onClick={() => calculateFrequencyWavelength('wavelength')}
+                          >
+                            → Get λ
+                          </Button>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <span className="text-2xl font-bold text-muted-foreground">↔</span>
+                        </div>
+                        <div>
+                          <Label htmlFor="wavelength">Wavelength (cm)</Label>
+                          <Input
+                            id="wavelength"
+                            type="number"
+                            value={frequencyInputs.wavelength}
+                            onChange={(e) => setFrequencyInputs({...frequencyInputs, wavelength: e.target.value})}
+                            placeholder="12.5"
+                          />
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="w-full mt-2" 
+                            onClick={() => calculateFrequencyWavelength('frequency')}
+                          >
+                            → Get f
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <Separator />
+                  <AccordionItem value="snr">
+                    <AccordionTrigger className="flex items-center">
+                      <Activity className="mr-2 h-4 w-4" />
+                      Signal-to-Noise Ratio Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="signal">Signal Power</Label>
+                          <Input
+                            id="signal"
+                            type="number"
+                            value={noiseInputs.signal}
+                            onChange={(e) => setNoiseInputs({...noiseInputs, signal: e.target.value})}
+                            placeholder="Signal"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="noise">Noise Power</Label>
+                          <Input
+                            id="noise"
+                            type="number"
+                            value={noiseInputs.noise}
+                            onChange={(e) => setNoiseInputs({...noiseInputs, noise: e.target.value})}
+                            placeholder="Noise"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateSNR} className="w-full">
+                            Calculate SNR
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* Frequency/Wavelength Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold">Frequency ↔ Wavelength Calculator</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="frequency">Frequency (MHz)</Label>
-                      <Input
-                        id="frequency"
-                        type="number"
-                        value={frequencyInputs.frequency}
-                        onChange={(e) => setFrequencyInputs({...frequencyInputs, frequency: e.target.value})}
-                        placeholder="2400"
-                      />
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full mt-2" 
-                        onClick={() => calculateFrequencyWavelength('wavelength')}
-                      >
-                        → Get λ
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-2xl font-bold text-muted-foreground">↔</span>
-                    </div>
-                    <div>
-                      <Label htmlFor="wavelength">Wavelength (cm)</Label>
-                      <Input
-                        id="wavelength"
-                        type="number"
-                        value={frequencyInputs.wavelength}
-                        onChange={(e) => setFrequencyInputs({...frequencyInputs, wavelength: e.target.value})}
-                        placeholder="12.5"
-                      />
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full mt-2" 
-                        onClick={() => calculateFrequencyWavelength('frequency')}
-                      >
-                        → Get f
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  <AccordionItem value="pathloss">
+                    <AccordionTrigger className="flex items-center">
+                      <Zap className="mr-2 h-4 w-4" />
+                      Free Space Path Loss Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="freq-path">Frequency (MHz)</Label>
+                          <Input
+                            id="freq-path"
+                            type="number"
+                            value={pathLossInputs.frequency}
+                            onChange={(e) => setPathLossInputs({...pathLossInputs, frequency: e.target.value})}
+                            placeholder="2400"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="distance">Distance (km)</Label>
+                          <Input
+                            id="distance"
+                            type="number"
+                            value={pathLossInputs.distance}
+                            onChange={(e) => setPathLossInputs({...pathLossInputs, distance: e.target.value})}
+                            placeholder="10"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculatePathLoss} className="w-full">
+                            Calculate Loss
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="antenna">
+                    <AccordionTrigger>
+                      Antenna Length Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="ant-freq">Frequency (MHz)</Label>
+                          <Input
+                            id="ant-freq"
+                            type="number"
+                            value={antennaInputs.frequency}
+                            onChange={(e) => setAntennaInputs({...antennaInputs, frequency: e.target.value})}
+                            placeholder="146"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="ant-length">Length (m)</Label>
+                          <Input
+                            id="ant-length"
+                            type="number"
+                            value={antennaInputs.length}
+                            onChange={(e) => setAntennaInputs({...antennaInputs, length: e.target.value})}
+                            placeholder="0.51"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateAntennaLength} className="w-full">
+                            Calculate
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
 
@@ -334,7 +525,14 @@ const RF = () => {
                 <div className="space-y-3">
                   {standards.map((standard, index) => (
                     <div key={index} className="border-l-2 border-primary pl-3">
-                      <h5 className="font-medium text-sm">{standard.name}</h5>
+                      <div className="flex justify-between items-start mb-1">
+                        <h5 className="font-medium text-sm">{standard.name}</h5>
+                        <Button size="sm" variant="ghost" asChild className="h-6 px-2">
+                          <a href={standard.pdf} target="_blank" rel="noopener noreferrer">
+                            <FileText className="h-3 w-3" />
+                          </a>
+                        </Button>
+                      </div>
                       <p className="text-xs text-muted-foreground">{standard.description}</p>
                     </div>
                   ))}
@@ -352,15 +550,16 @@ const RF = () => {
                 <CardDescription>Live feed from RF/microwave sources</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {recentArticles.map((article, index) => (
-                    <div key={index} className="space-y-1">
+                    <div key={index} className="space-y-2">
                       <h5 className="font-medium text-sm leading-tight">{article.title}</h5>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
                       <div className="flex justify-between items-center text-xs text-muted-foreground">
                         <span>{article.source}</span>
                         <span>{article.time}</span>
                       </div>
-                      {index < recentArticles.length - 1 && <Separator className="mt-2" />}
+                      {index < recentArticles.length - 1 && <Separator className="mt-3" />}
                     </div>
                   ))}
                 </div>

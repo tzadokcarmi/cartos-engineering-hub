@@ -14,15 +14,21 @@ import {
   FileText,
   Thermometer,
   Wrench,
-  TrendingUp
+  TrendingUp,
+  Activity,
+  Settings
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Mechanics = () => {
   const [stressInputs, setStressInputs] = useState({ force: '', area: '' });
   const [torqueInputs, setTorqueInputs] = useState({ force: '', radius: '' });
   const [thermalInputs, setThermalInputs] = useState({ length: '', temp: '', coefficient: '' });
+  const [beamInputs, setBeamInputs] = useState({ load: '', length: '', momentOfInertia: '' });
+  const [fatigueInputs, setFatigueInputs] = useState({ maxStress: '', minStress: '', cycles: '' });
+  const [materialInputs, setMaterialInputs] = useState({ youngsModulus: '', stress: '' });
 
   const suppliers = [
     {
@@ -63,19 +69,44 @@ const Mechanics = () => {
   ];
 
   const standards = [
-    { name: "ISO 898", description: "Mechanical properties of fasteners" },
-    { name: "ASME Y14.5", description: "Dimensioning and tolerancing" },
-    { name: "ISO 2768", description: "General tolerances" },
-    { name: "MIL-STD-810", description: "Environmental test methods" },
-    { name: "NASA-STD-5001", description: "Structural design and test factors" }
+    { name: "ISO 898", description: "Mechanical properties of fasteners", pdf: "https://www.iso.org/standard/60604.html" },
+    { name: "ASME Y14.5", description: "Dimensioning and tolerancing", pdf: "https://www.asme.org/codes-standards/find-codes-standards/y14-5-dimensioning-tolerancing" },
+    { name: "ISO 2768", description: "General tolerances", pdf: "https://www.iso.org/standard/8400.html" },
+    { name: "MIL-STD-810", description: "Environmental test methods", pdf: "https://www.navair.navy.mil/product/MIL-STD-810" },
+    { name: "NASA-STD-5001", description: "Structural design and test factors", pdf: "https://standards.nasa.gov/standard/nasa/nasa-std-5001" }
   ];
 
   const recentArticles = [
-    { title: "Advanced Materials in Aerospace Applications", source: "NASA Technical Reports", time: "2 hours ago" },
-    { title: "Finite Element Analysis Best Practices", source: "Engineering.com", time: "4 hours ago" },
-    { title: "Additive Manufacturing Design Guidelines", source: "ASME Journal", time: "6 hours ago" },
-    { title: "Fatigue Analysis in Critical Components", source: "Materials Science", time: "8 hours ago" },
-    { title: "Thermal Management in Electronic Enclosures", source: "Design News", time: "12 hours ago" }
+    { 
+      title: "Advanced Materials in Aerospace Applications", 
+      source: "NASA Technical Reports", 
+      time: "2 hours ago",
+      summary: "Revolutionary carbon nanotube-reinforced composites achieving 40% weight reduction while maintaining structural integrity in extreme temperatures."
+    },
+    { 
+      title: "Finite Element Analysis Best Practices", 
+      source: "Engineering.com", 
+      time: "4 hours ago",
+      summary: "Mesh optimization techniques and convergence studies for complex geometries, including adaptive refinement and error estimation methods."
+    },
+    { 
+      title: "Additive Manufacturing Design Guidelines", 
+      source: "ASME Journal", 
+      time: "6 hours ago",
+      summary: "Design for AM principles including support structures, surface finish optimization, and post-processing considerations for metal 3D printing."
+    },
+    { 
+      title: "Fatigue Analysis in Critical Components", 
+      source: "Materials Science", 
+      time: "8 hours ago",
+      summary: "Paris law applications and crack propagation modeling in high-cycle fatigue scenarios with probabilistic failure analysis."
+    },
+    { 
+      title: "Thermal Management in Electronic Enclosures", 
+      source: "Design News", 
+      time: "12 hours ago",
+      summary: "Heat sink design optimization using topology optimization and advanced cooling techniques for high-power density applications."
+    }
   ];
 
   const calculateStress = () => {
@@ -115,6 +146,53 @@ const Mechanics = () => {
     }
   };
 
+  const calculateBeamDeflection = () => {
+    const load = parseFloat(beamInputs.load);
+    const length = parseFloat(beamInputs.length);
+    const momentOfInertia = parseFloat(beamInputs.momentOfInertia);
+    const E = 200000; // Steel modulus in MPa (default)
+    
+    if (load && length && momentOfInertia) {
+      // Simply supported beam with point load at center
+      const deflection = (load * Math.pow(length, 3)) / (48 * E * momentOfInertia);
+      toast({
+        title: "Beam Deflection Result",
+        description: `Maximum Deflection: ${deflection.toFixed(6)} mm`,
+      });
+    }
+  };
+
+  const calculateFatigueLife = () => {
+    const maxStress = parseFloat(fatigueInputs.maxStress);
+    const minStress = parseFloat(fatigueInputs.minStress);
+    const cycles = parseFloat(fatigueInputs.cycles);
+    
+    if (maxStress && minStress) {
+      const stressAmplitude = (maxStress - minStress) / 2;
+      const meanStress = (maxStress + minStress) / 2;
+      const stressRatio = minStress / maxStress;
+      
+      toast({
+        title: "Fatigue Analysis Result",
+        description: `Stress Amplitude: ${stressAmplitude.toFixed(2)} MPa, R-ratio: ${stressRatio.toFixed(3)}`,
+      });
+    }
+  };
+
+  const calculateStrain = () => {
+    const youngsModulus = parseFloat(materialInputs.youngsModulus);
+    const stress = parseFloat(materialInputs.stress);
+    
+    if (youngsModulus && stress) {
+      const strain = stress / youngsModulus;
+      const strainPercent = strain * 100;
+      toast({
+        title: "Strain Calculation",
+        description: `Strain: ${strain.toFixed(6)} (${strainPercent.toFixed(4)}%)`,
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -140,123 +218,243 @@ const Mechanics = () => {
                   Essential mechanical engineering calculations
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Stress Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold flex items-center">
-                    <Wrench className="mr-2 h-4 w-4" />
-                    Stress Calculator
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="force">Force (N)</Label>
-                      <Input
-                        id="force"
-                        type="number"
-                        value={stressInputs.force}
-                        onChange={(e) => setStressInputs({...stressInputs, force: e.target.value})}
-                        placeholder="Enter force"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="area">Area (mm²)</Label>
-                      <Input
-                        id="area"
-                        type="number"
-                        value={stressInputs.area}
-                        onChange={(e) => setStressInputs({...stressInputs, area: e.target.value})}
-                        placeholder="Enter area"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={calculateStress} className="w-full">
-                        Calculate Stress
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="stress">
+                    <AccordionTrigger className="flex items-center">
+                      <Wrench className="mr-2 h-4 w-4" />
+                      Stress Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="force">Force (N)</Label>
+                          <Input
+                            id="force"
+                            type="number"
+                            value={stressInputs.force}
+                            onChange={(e) => setStressInputs({...stressInputs, force: e.target.value})}
+                            placeholder="Enter force"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="area">Area (mm²)</Label>
+                          <Input
+                            id="area"
+                            type="number"
+                            value={stressInputs.area}
+                            onChange={(e) => setStressInputs({...stressInputs, area: e.target.value})}
+                            placeholder="Enter area"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateStress} className="w-full">
+                            Calculate Stress
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <Separator />
+                  <AccordionItem value="torque">
+                    <AccordionTrigger>
+                      Torque Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="torque-force">Force (N)</Label>
+                          <Input
+                            id="torque-force"
+                            type="number"
+                            value={torqueInputs.force}
+                            onChange={(e) => setTorqueInputs({...torqueInputs, force: e.target.value})}
+                            placeholder="Enter force"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="radius">Radius (m)</Label>
+                          <Input
+                            id="radius"
+                            type="number"
+                            value={torqueInputs.radius}
+                            onChange={(e) => setTorqueInputs({...torqueInputs, radius: e.target.value})}
+                            placeholder="Enter radius"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateTorque} className="w-full">
+                            Calculate Torque
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* Torque Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold">Torque Calculator</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                      <Label htmlFor="torque-force">Force (N)</Label>
-                      <Input
-                        id="torque-force"
-                        type="number"
-                        value={torqueInputs.force}
-                        onChange={(e) => setTorqueInputs({...torqueInputs, force: e.target.value})}
-                        placeholder="Enter force"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="radius">Radius (m)</Label>
-                      <Input
-                        id="radius"
-                        type="number"
-                        value={torqueInputs.radius}
-                        onChange={(e) => setTorqueInputs({...torqueInputs, radius: e.target.value})}
-                        placeholder="Enter radius"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={calculateTorque} className="w-full">
-                        Calculate Torque
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  <AccordionItem value="thermal">
+                    <AccordionTrigger className="flex items-center">
+                      <Thermometer className="mr-2 h-4 w-4" />
+                      Thermal Expansion Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div>
+                          <Label htmlFor="length">Length (mm)</Label>
+                          <Input
+                            id="length"
+                            type="number"
+                            value={thermalInputs.length}
+                            onChange={(e) => setThermalInputs({...thermalInputs, length: e.target.value})}
+                            placeholder="Initial length"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="temp">ΔT (°C)</Label>
+                          <Input
+                            id="temp"
+                            type="number"
+                            value={thermalInputs.temp}
+                            onChange={(e) => setThermalInputs({...thermalInputs, temp: e.target.value})}
+                            placeholder="Temp change"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="coefficient">α (1/°C)</Label>
+                          <Input
+                            id="coefficient"
+                            type="number"
+                            step="0.000001"
+                            value={thermalInputs.coefficient}
+                            onChange={(e) => setThermalInputs({...thermalInputs, coefficient: e.target.value})}
+                            placeholder="Coefficient"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateThermalExpansion} className="w-full">
+                            Calculate
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <Separator />
+                  <AccordionItem value="beam">
+                    <AccordionTrigger className="flex items-center">
+                      <Activity className="mr-2 h-4 w-4" />
+                      Beam Deflection Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div>
+                          <Label htmlFor="load">Load (N)</Label>
+                          <Input
+                            id="load"
+                            type="number"
+                            value={beamInputs.load}
+                            onChange={(e) => setBeamInputs({...beamInputs, load: e.target.value})}
+                            placeholder="Point load"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="beam-length">Length (mm)</Label>
+                          <Input
+                            id="beam-length"
+                            type="number"
+                            value={beamInputs.length}
+                            onChange={(e) => setBeamInputs({...beamInputs, length: e.target.value})}
+                            placeholder="Beam length"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="moment">I (mm⁴)</Label>
+                          <Input
+                            id="moment"
+                            type="number"
+                            value={beamInputs.momentOfInertia}
+                            onChange={(e) => setBeamInputs({...beamInputs, momentOfInertia: e.target.value})}
+                            placeholder="Moment of inertia"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateBeamDeflection} className="w-full">
+                            Calculate
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* Thermal Expansion Calculator */}
-                <div className="space-y-3">
-                  <h4 className="font-semibold flex items-center">
-                    <Thermometer className="mr-2 h-4 w-4" />
-                    Thermal Expansion Calculator
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                    <div>
-                      <Label htmlFor="length">Length (mm)</Label>
-                      <Input
-                        id="length"
-                        type="number"
-                        value={thermalInputs.length}
-                        onChange={(e) => setThermalInputs({...thermalInputs, length: e.target.value})}
-                        placeholder="Initial length"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="temp">ΔT (°C)</Label>
-                      <Input
-                        id="temp"
-                        type="number"
-                        value={thermalInputs.temp}
-                        onChange={(e) => setThermalInputs({...thermalInputs, temp: e.target.value})}
-                        placeholder="Temp change"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="coefficient">α (1/°C)</Label>
-                      <Input
-                        id="coefficient"
-                        type="number"
-                        step="0.000001"
-                        value={thermalInputs.coefficient}
-                        onChange={(e) => setThermalInputs({...thermalInputs, coefficient: e.target.value})}
-                        placeholder="Coefficient"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button onClick={calculateThermalExpansion} className="w-full">
-                        Calculate
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  <AccordionItem value="fatigue">
+                    <AccordionTrigger className="flex items-center">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Fatigue Analysis Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="max-stress">Max Stress (MPa)</Label>
+                          <Input
+                            id="max-stress"
+                            type="number"
+                            value={fatigueInputs.maxStress}
+                            onChange={(e) => setFatigueInputs({...fatigueInputs, maxStress: e.target.value})}
+                            placeholder="Maximum"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="min-stress">Min Stress (MPa)</Label>
+                          <Input
+                            id="min-stress"
+                            type="number"
+                            value={fatigueInputs.minStress}
+                            onChange={(e) => setFatigueInputs({...fatigueInputs, minStress: e.target.value})}
+                            placeholder="Minimum"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateFatigueLife} className="w-full">
+                            Analyze
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="strain">
+                    <AccordionTrigger>
+                      Strain Calculator
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <Label htmlFor="youngs">Young's Modulus (GPa)</Label>
+                          <Input
+                            id="youngs"
+                            type="number"
+                            value={materialInputs.youngsModulus}
+                            onChange={(e) => setMaterialInputs({...materialInputs, youngsModulus: e.target.value})}
+                            placeholder="200"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="stress-input">Stress (MPa)</Label>
+                          <Input
+                            id="stress-input"
+                            type="number"
+                            value={materialInputs.stress}
+                            onChange={(e) => setMaterialInputs({...materialInputs, stress: e.target.value})}
+                            placeholder="Stress"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button onClick={calculateStrain} className="w-full">
+                            Calculate
+                          </Button>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
 
@@ -316,7 +514,14 @@ const Mechanics = () => {
                 <div className="space-y-3">
                   {standards.map((standard, index) => (
                     <div key={index} className="border-l-2 border-primary pl-3">
-                      <h5 className="font-medium text-sm">{standard.name}</h5>
+                      <div className="flex justify-between items-start mb-1">
+                        <h5 className="font-medium text-sm">{standard.name}</h5>
+                        <Button size="sm" variant="ghost" asChild className="h-6 px-2">
+                          <a href={standard.pdf} target="_blank" rel="noopener noreferrer">
+                            <FileText className="h-3 w-3" />
+                          </a>
+                        </Button>
+                      </div>
                       <p className="text-xs text-muted-foreground">{standard.description}</p>
                     </div>
                   ))}
@@ -334,15 +539,16 @@ const Mechanics = () => {
                 <CardDescription>Live feed from engineering sources</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {recentArticles.map((article, index) => (
-                    <div key={index} className="space-y-1">
+                    <div key={index} className="space-y-2">
                       <h5 className="font-medium text-sm leading-tight">{article.title}</h5>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
                       <div className="flex justify-between items-center text-xs text-muted-foreground">
                         <span>{article.source}</span>
                         <span>{article.time}</span>
                       </div>
-                      {index < recentArticles.length - 1 && <Separator className="mt-2" />}
+                      {index < recentArticles.length - 1 && <Separator className="mt-3" />}
                     </div>
                   ))}
                 </div>
