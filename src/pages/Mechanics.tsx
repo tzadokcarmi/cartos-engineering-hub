@@ -23,12 +23,28 @@ import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Mechanics = () => {
-  const [stressInputs, setStressInputs] = useState({ force: '', area: '' });
-  const [torqueInputs, setTorqueInputs] = useState({ force: '', radius: '' });
-  const [thermalInputs, setThermalInputs] = useState({ length: '', temp: '', coefficient: '' });
-  const [beamInputs, setBeamInputs] = useState({ load: '', length: '', momentOfInertia: '' });
-  const [fatigueInputs, setFatigueInputs] = useState({ maxStress: '', minStress: '', cycles: '' });
-  const [materialInputs, setMaterialInputs] = useState({ youngsModulus: '', stress: '' });
+  // Fluid Flow Calculator States
+  const [fluidInputs, setFluidInputs] = useState({ 
+    density: '', velocity: '', diameter: '', viscosity: '', roughness: '', length: '', flowRate: ''
+  });
+  
+  // Structural Stress Calculator States
+  const [structuralInputs, setStructuralInputs] = useState({ 
+    axialForce: '', area: '', length: '', elasticModulus: '', moment: '', torsion: '', radius: '', 
+    beamLoad: '', beamLength: '', momentOfInertia: '', yieldStrength: '', ultimateStrength: ''
+  });
+  
+  // Gear & Mechanism Calculator States
+  const [gearInputs, setGearInputs] = useState({ 
+    teeth1: '', teeth2: '', module: '', torqueIn: '', rpm: '', efficiency: '', 
+    shaftDiameter: '', shaftLength: '', bearingLoad: ''
+  });
+  
+  // Thermal Systems Calculator States
+  const [thermalInputs, setThermalInputs] = useState({ 
+    thermalConductivity: '', thickness: '', area: '', tempDiff: '', convectionCoeff: '', 
+    surfaceArea: '', fluidTemp: '', heatCapacity: '', mass: '', timeStep: '', finLength: '', finDiameter: ''
+  });
 
   const suppliers = [
     {
@@ -109,86 +125,191 @@ const Mechanics = () => {
     }
   ];
 
-  const calculateStress = () => {
-    const force = parseFloat(stressInputs.force);
-    const area = parseFloat(stressInputs.area);
-    if (force && area) {
-      const stress = force / area;
-      toast({
-        title: "Stress Calculation Result",
-        description: `Stress: ${stress.toFixed(2)} MPa`,
-      });
-    }
-  };
-
-  const calculateTorque = () => {
-    const force = parseFloat(torqueInputs.force);
-    const radius = parseFloat(torqueInputs.radius);
-    if (force && radius) {
-      const torque = force * radius;
-      toast({
-        title: "Torque Calculation Result",
-        description: `Torque: ${torque.toFixed(2)} N⋅m`,
-      });
-    }
-  };
-
-  const calculateThermalExpansion = () => {
-    const length = parseFloat(thermalInputs.length);
-    const temp = parseFloat(thermalInputs.temp);
-    const coefficient = parseFloat(thermalInputs.coefficient);
-    if (length && temp && coefficient) {
-      const expansion = length * coefficient * temp;
-      toast({
-        title: "Thermal Expansion Result",
-        description: `Expansion: ${expansion.toFixed(6)} mm`,
-      });
-    }
-  };
-
-  const calculateBeamDeflection = () => {
-    const load = parseFloat(beamInputs.load);
-    const length = parseFloat(beamInputs.length);
-    const momentOfInertia = parseFloat(beamInputs.momentOfInertia);
-    const E = 200000; // Steel modulus in MPa (default)
+  // Fluid Flow Calculations
+  const calculateReynoldsNumber = () => {
+    const density = parseFloat(fluidInputs.density);
+    const velocity = parseFloat(fluidInputs.velocity);
+    const diameter = parseFloat(fluidInputs.diameter);
+    const viscosity = parseFloat(fluidInputs.viscosity);
     
-    if (load && length && momentOfInertia) {
-      // Simply supported beam with point load at center
-      const deflection = (load * Math.pow(length, 3)) / (48 * E * momentOfInertia);
+    if (density && velocity && diameter && viscosity) {
+      const reynolds = (density * velocity * diameter) / viscosity;
+      const flowType = reynolds < 2300 ? "Laminar" : reynolds > 4000 ? "Turbulent" : "Transitional";
       toast({
-        title: "Beam Deflection Result",
-        description: `Maximum Deflection: ${deflection.toFixed(6)} mm`,
+        title: "Reynolds Number Result",
+        description: `Re = ${reynolds.toFixed(0)} (${flowType} flow)`,
       });
     }
   };
 
-  const calculateFatigueLife = () => {
-    const maxStress = parseFloat(fatigueInputs.maxStress);
-    const minStress = parseFloat(fatigueInputs.minStress);
-    const cycles = parseFloat(fatigueInputs.cycles);
+  const calculatePressureDrop = () => {
+    const density = parseFloat(fluidInputs.density);
+    const velocity = parseFloat(fluidInputs.velocity);
+    const length = parseFloat(fluidInputs.length);
+    const diameter = parseFloat(fluidInputs.diameter);
+    const roughness = parseFloat(fluidInputs.roughness);
     
-    if (maxStress && minStress) {
-      const stressAmplitude = (maxStress - minStress) / 2;
-      const meanStress = (maxStress + minStress) / 2;
-      const stressRatio = minStress / maxStress;
+    if (density && velocity && length && diameter && roughness) {
+      const reynolds = (density * velocity * diameter) / 0.001; // Assuming water viscosity
+      const relativeRoughness = roughness / diameter;
+      // Simplified Darcy-Weisbach equation with Colebrook approximation
+      const frictionFactor = 0.02; // Simplified for demo
+      const pressureDrop = frictionFactor * (length / diameter) * (density * velocity * velocity) / 2;
       
       toast({
-        title: "Fatigue Analysis Result",
-        description: `Stress Amplitude: ${stressAmplitude.toFixed(2)} MPa, R-ratio: ${stressRatio.toFixed(3)}`,
+        title: "Pressure Drop Result",
+        description: `ΔP = ${(pressureDrop / 1000).toFixed(2)} kPa (f = ${frictionFactor.toFixed(4)})`,
       });
     }
   };
 
-  const calculateStrain = () => {
-    const youngsModulus = parseFloat(materialInputs.youngsModulus);
-    const stress = parseFloat(materialInputs.stress);
+  // Structural Stress Calculations
+  const calculateAxialStress = () => {
+    const force = parseFloat(structuralInputs.axialForce);
+    const area = parseFloat(structuralInputs.area);
     
-    if (youngsModulus && stress) {
-      const strain = stress / youngsModulus;
-      const strainPercent = strain * 100;
+    if (force && area) {
+      const stress = force / area;
+      const yieldStrength = parseFloat(structuralInputs.yieldStrength) || 250;
+      const safetyFactor = yieldStrength / stress;
       toast({
-        title: "Strain Calculation",
-        description: `Strain: ${strain.toFixed(6)} (${strainPercent.toFixed(4)}%)`,
+        title: "Axial Stress Result",
+        description: `σ = ${stress.toFixed(2)} MPa, Safety Factor = ${safetyFactor.toFixed(2)}`,
+      });
+    }
+  };
+
+  const calculateBendingStress = () => {
+    const moment = parseFloat(structuralInputs.moment);
+    const momentOfInertia = parseFloat(structuralInputs.momentOfInertia);
+    const distance = parseFloat(structuralInputs.radius); // Distance from neutral axis
+    
+    if (moment && momentOfInertia && distance) {
+      const bendingStress = (moment * distance) / momentOfInertia;
+      toast({
+        title: "Bending Stress Result",
+        description: `σ_b = ${bendingStress.toFixed(2)} MPa`,
+      });
+    }
+  };
+
+  const calculateTorsionalStress = () => {
+    const torque = parseFloat(structuralInputs.torsion);
+    const radius = parseFloat(structuralInputs.radius);
+    const polarMoment = Math.PI * Math.pow(radius, 4) / 2; // Solid circular shaft
+    
+    if (torque && radius) {
+      const shearStress = (torque * radius) / polarMoment;
+      toast({
+        title: "Torsional Stress Result",
+        description: `τ = ${shearStress.toFixed(2)} MPa`,
+      });
+    }
+  };
+
+  const calculateBucklingLoad = () => {
+    const elasticModulus = parseFloat(structuralInputs.elasticModulus) || 200000;
+    const momentOfInertia = parseFloat(structuralInputs.momentOfInertia);
+    const length = parseFloat(structuralInputs.length);
+    
+    if (momentOfInertia && length) {
+      const eulerLoad = (Math.PI * Math.PI * elasticModulus * momentOfInertia) / (length * length);
+      toast({
+        title: "Euler Buckling Load",
+        description: `P_cr = ${(eulerLoad / 1000).toFixed(2)} kN`,
+      });
+    }
+  };
+
+  // Gear & Mechanism Calculations
+  const calculateGearRatio = () => {
+    const teeth1 = parseFloat(gearInputs.teeth1);
+    const teeth2 = parseFloat(gearInputs.teeth2);
+    
+    if (teeth1 && teeth2) {
+      const ratio = teeth2 / teeth1;
+      const rpm2 = parseFloat(gearInputs.rpm) / ratio;
+      toast({
+        title: "Gear Ratio Result",
+        description: `Ratio = ${ratio.toFixed(3)}:1, Output RPM = ${rpm2.toFixed(1)}`,
+      });
+    }
+  };
+
+  const calculateTorqueTransfer = () => {
+    const torqueIn = parseFloat(gearInputs.torqueIn);
+    const teeth1 = parseFloat(gearInputs.teeth1);
+    const teeth2 = parseFloat(gearInputs.teeth2);
+    const efficiency = parseFloat(gearInputs.efficiency) || 0.95;
+    
+    if (torqueIn && teeth1 && teeth2) {
+      const ratio = teeth2 / teeth1;
+      const torqueOut = torqueIn * ratio * efficiency;
+      toast({
+        title: "Torque Transfer Result",
+        description: `T_out = ${torqueOut.toFixed(2)} N⋅m (η = ${(efficiency * 100).toFixed(1)}%)`,
+      });
+    }
+  };
+
+  const calculateShaftSizing = () => {
+    const torque = parseFloat(gearInputs.torqueIn);
+    const allowableStress = 40; // MPa for steel shaft
+    
+    if (torque) {
+      const diameter = Math.pow((16 * torque) / (Math.PI * allowableStress), 1/3) * 1000; // mm
+      toast({
+        title: "Shaft Sizing Result",
+        description: `Min Diameter = ${diameter.toFixed(1)} mm`,
+      });
+    }
+  };
+
+  // Thermal Systems Calculations
+  const calculateConductiveHeatTransfer = () => {
+    const k = parseFloat(thermalInputs.thermalConductivity);
+    const area = parseFloat(thermalInputs.area);
+    const thickness = parseFloat(thermalInputs.thickness);
+    const tempDiff = parseFloat(thermalInputs.tempDiff);
+    
+    if (k && area && thickness && tempDiff) {
+      const heatRate = (k * area * tempDiff) / thickness;
+      toast({
+        title: "Conductive Heat Transfer",
+        description: `Q = ${heatRate.toFixed(2)} W`,
+      });
+    }
+  };
+
+  const calculateConvectiveHeatTransfer = () => {
+    const h = parseFloat(thermalInputs.convectionCoeff);
+    const area = parseFloat(thermalInputs.surfaceArea);
+    const tempDiff = parseFloat(thermalInputs.tempDiff);
+    
+    if (h && area && tempDiff) {
+      const heatRate = h * area * tempDiff;
+      toast({
+        title: "Convective Heat Transfer",
+        description: `Q = ${heatRate.toFixed(2)} W`,
+      });
+    }
+  };
+
+  const calculateFinEfficiency = () => {
+    const length = parseFloat(thermalInputs.finLength);
+    const diameter = parseFloat(thermalInputs.finDiameter);
+    const h = parseFloat(thermalInputs.convectionCoeff) || 25;
+    const k = parseFloat(thermalInputs.thermalConductivity) || 200;
+    
+    if (length && diameter) {
+      const perimeter = Math.PI * diameter;
+      const area = Math.PI * diameter * diameter / 4;
+      const m = Math.sqrt((h * perimeter) / (k * area));
+      const efficiency = Math.tanh(m * length) / (m * length);
+      
+      toast({
+        title: "Fin Efficiency Result",
+        description: `η_fin = ${(efficiency * 100).toFixed(1)}%`,
       });
     }
   };
@@ -220,236 +341,493 @@ const Mechanics = () => {
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="stress">
-                    <AccordionTrigger className="flex items-center">
-                      <Wrench className="mr-2 h-4 w-4" />
-                      Stress Calculator
+                  {/* Fluid Flow Calculators */}
+                  <AccordionItem value="fluid-flow" className="border rounded-lg mb-2">
+                    <AccordionTrigger className="px-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-3">
+                          🌀
+                        </div>
+                        <div className="text-left">
+                          <h3 className="font-semibold">Advanced Fluid Flow Calculators</h3>
+                          <p className="text-sm text-muted-foreground">Reynolds number, pressure drop, friction analysis</p>
+                        </div>
+                      </div>
                     </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <Label htmlFor="force">Force (N)</Label>
-                          <Input
-                            id="force"
-                            type="number"
-                            value={stressInputs.force}
-                            onChange={(e) => setStressInputs({...stressInputs, force: e.target.value})}
-                            placeholder="Enter force"
-                          />
+                    <AccordionContent className="px-4 space-y-4">
+                      {/* Reynolds Number */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3 flex items-center">
+                          <Calculator className="mr-2 h-4 w-4" />
+                          Reynolds Number & Flow Regime
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                          <div>
+                            <Label>Density (kg/m³)</Label>
+                            <Input
+                              type="number"
+                              value={fluidInputs.density}
+                              onChange={(e) => setFluidInputs({...fluidInputs, density: e.target.value})}
+                              placeholder="1000"
+                            />
+                          </div>
+                          <div>
+                            <Label>Velocity (m/s)</Label>
+                            <Input
+                              type="number"
+                              value={fluidInputs.velocity}
+                              onChange={(e) => setFluidInputs({...fluidInputs, velocity: e.target.value})}
+                              placeholder="2.0"
+                            />
+                          </div>
+                          <div>
+                            <Label>Diameter (m)</Label>
+                            <Input
+                              type="number"
+                              value={fluidInputs.diameter}
+                              onChange={(e) => setFluidInputs({...fluidInputs, diameter: e.target.value})}
+                              placeholder="0.05"
+                            />
+                          </div>
+                          <div>
+                            <Label>Viscosity (Pa⋅s)</Label>
+                            <Input
+                              type="number"
+                              step="0.0001"
+                              value={fluidInputs.viscosity}
+                              onChange={(e) => setFluidInputs({...fluidInputs, viscosity: e.target.value})}
+                              placeholder="0.001"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateReynoldsNumber} className="w-full">
+                              Calculate Re
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label htmlFor="area">Area (mm²)</Label>
-                          <Input
-                            id="area"
-                            type="number"
-                            value={stressInputs.area}
-                            onChange={(e) => setStressInputs({...stressInputs, area: e.target.value})}
-                            placeholder="Enter area"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateStress} className="w-full">
-                            Calculate Stress
-                          </Button>
+                      </div>
+
+                      {/* Pressure Drop */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Pressure Drop (Darcy-Weisbach)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label>Length (m)</Label>
+                            <Input
+                              type="number"
+                              value={fluidInputs.length}
+                              onChange={(e) => setFluidInputs({...fluidInputs, length: e.target.value})}
+                              placeholder="100"
+                            />
+                          </div>
+                          <div>
+                            <Label>Roughness (mm)</Label>
+                            <Input
+                              type="number"
+                              step="0.001"
+                              value={fluidInputs.roughness}
+                              onChange={(e) => setFluidInputs({...fluidInputs, roughness: e.target.value})}
+                              placeholder="0.045"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculatePressureDrop} className="w-full">
+                              Calculate ΔP
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="torque">
-                    <AccordionTrigger>
-                      Torque Calculator
+                  {/* Structural Stress Calculators */}
+                  <AccordionItem value="structural" className="border rounded-lg mb-2">
+                    <AccordionTrigger className="px-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center mr-3">
+                          🏗️
+                        </div>
+                        <div className="text-left">
+                          <h3 className="font-semibold">Load & Structural Stress Analysis</h3>
+                          <p className="text-sm text-muted-foreground">Axial, bending, torsional stress with safety factors</p>
+                        </div>
+                      </div>
                     </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <Label htmlFor="torque-force">Force (N)</Label>
-                          <Input
-                            id="torque-force"
-                            type="number"
-                            value={torqueInputs.force}
-                            onChange={(e) => setTorqueInputs({...torqueInputs, force: e.target.value})}
-                            placeholder="Enter force"
-                          />
+                    <AccordionContent className="px-4 space-y-4">
+                      {/* Axial Stress */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Axial Stress & Safety Factor</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                          <div>
+                            <Label>Force (N)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.axialForce}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, axialForce: e.target.value})}
+                              placeholder="10000"
+                            />
+                          </div>
+                          <div>
+                            <Label>Area (mm²)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.area}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, area: e.target.value})}
+                              placeholder="500"
+                            />
+                          </div>
+                          <div>
+                            <Label>Yield Strength (MPa)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.yieldStrength}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, yieldStrength: e.target.value})}
+                              placeholder="250"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateAxialStress} className="w-full">
+                              Calculate σ
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label htmlFor="radius">Radius (m)</Label>
-                          <Input
-                            id="radius"
-                            type="number"
-                            value={torqueInputs.radius}
-                            onChange={(e) => setTorqueInputs({...torqueInputs, radius: e.target.value})}
-                            placeholder="Enter radius"
-                          />
+                      </div>
+
+                      {/* Bending Stress */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Bending Stress</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                          <div>
+                            <Label>Moment (N⋅m)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.moment}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, moment: e.target.value})}
+                              placeholder="1000"
+                            />
+                          </div>
+                          <div>
+                            <Label>Distance (mm)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.radius}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, radius: e.target.value})}
+                              placeholder="25"
+                            />
+                          </div>
+                          <div>
+                            <Label>I (mm⁴)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.momentOfInertia}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, momentOfInertia: e.target.value})}
+                              placeholder="100000"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateBendingStress} className="w-full">
+                              Calculate σ_b
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateTorque} className="w-full">
-                            Calculate Torque
-                          </Button>
+                      </div>
+
+                      {/* Torsional Stress */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Torsional Stress</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label>Torque (N⋅m)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.torsion}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, torsion: e.target.value})}
+                              placeholder="500"
+                            />
+                          </div>
+                          <div>
+                            <Label>Radius (mm)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.radius}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, radius: e.target.value})}
+                              placeholder="20"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateTorsionalStress} className="w-full">
+                              Calculate τ
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Buckling */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Euler Buckling Load</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label>Length (mm)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.length}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, length: e.target.value})}
+                              placeholder="1000"
+                            />
+                          </div>
+                          <div>
+                            <Label>E (GPa)</Label>
+                            <Input
+                              type="number"
+                              value={structuralInputs.elasticModulus}
+                              onChange={(e) => setStructuralInputs({...structuralInputs, elasticModulus: e.target.value})}
+                              placeholder="200"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateBucklingLoad} className="w-full">
+                              Calculate P_cr
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="thermal">
-                    <AccordionTrigger className="flex items-center">
-                      <Thermometer className="mr-2 h-4 w-4" />
-                      Thermal Expansion Calculator
+                  {/* Gear & Mechanism Calculators */}
+                  <AccordionItem value="gears" className="border rounded-lg mb-2">
+                    <AccordionTrigger className="px-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-3">
+                          ⚙️
+                        </div>
+                        <div className="text-left">
+                          <h3 className="font-semibold">Gear & Mechanism Analysis</h3>
+                          <p className="text-sm text-muted-foreground">Gear ratios, torque transfer, shaft sizing</p>
+                        </div>
+                      </div>
                     </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <div>
-                          <Label htmlFor="length">Length (mm)</Label>
-                          <Input
-                            id="length"
-                            type="number"
-                            value={thermalInputs.length}
-                            onChange={(e) => setThermalInputs({...thermalInputs, length: e.target.value})}
-                            placeholder="Initial length"
-                          />
+                    <AccordionContent className="px-4 space-y-4">
+                      {/* Gear Ratio */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Gear Ratio & Speed</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                          <div>
+                            <Label>Input Teeth</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.teeth1}
+                              onChange={(e) => setGearInputs({...gearInputs, teeth1: e.target.value})}
+                              placeholder="20"
+                            />
+                          </div>
+                          <div>
+                            <Label>Output Teeth</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.teeth2}
+                              onChange={(e) => setGearInputs({...gearInputs, teeth2: e.target.value})}
+                              placeholder="60"
+                            />
+                          </div>
+                          <div>
+                            <Label>Input RPM</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.rpm}
+                              onChange={(e) => setGearInputs({...gearInputs, rpm: e.target.value})}
+                              placeholder="1800"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateGearRatio} className="w-full">
+                              Calculate Ratio
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label htmlFor="temp">ΔT (°C)</Label>
-                          <Input
-                            id="temp"
-                            type="number"
-                            value={thermalInputs.temp}
-                            onChange={(e) => setThermalInputs({...thermalInputs, temp: e.target.value})}
-                            placeholder="Temp change"
-                          />
+                      </div>
+
+                      {/* Torque Transfer */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Torque Transfer & Efficiency</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label>Input Torque (N⋅m)</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.torqueIn}
+                              onChange={(e) => setGearInputs({...gearInputs, torqueIn: e.target.value})}
+                              placeholder="100"
+                            />
+                          </div>
+                          <div>
+                            <Label>Efficiency (%)</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.efficiency}
+                              onChange={(e) => setGearInputs({...gearInputs, efficiency: e.target.value})}
+                              placeholder="95"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateTorqueTransfer} className="w-full">
+                              Calculate T_out
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label htmlFor="coefficient">α (1/°C)</Label>
-                          <Input
-                            id="coefficient"
-                            type="number"
-                            step="0.000001"
-                            value={thermalInputs.coefficient}
-                            onChange={(e) => setThermalInputs({...thermalInputs, coefficient: e.target.value})}
-                            placeholder="Coefficient"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateThermalExpansion} className="w-full">
-                            Calculate
-                          </Button>
+                      </div>
+
+                      {/* Shaft Sizing */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Shaft Sizing</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <Label>Applied Torque (N⋅m)</Label>
+                            <Input
+                              type="number"
+                              value={gearInputs.torqueIn}
+                              onChange={(e) => setGearInputs({...gearInputs, torqueIn: e.target.value})}
+                              placeholder="200"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateShaftSizing} className="w-full">
+                              Calculate Diameter
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="beam">
-                    <AccordionTrigger className="flex items-center">
-                      <Activity className="mr-2 h-4 w-4" />
-                      Beam Deflection Calculator
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <div>
-                          <Label htmlFor="load">Load (N)</Label>
-                          <Input
-                            id="load"
-                            type="number"
-                            value={beamInputs.load}
-                            onChange={(e) => setBeamInputs({...beamInputs, load: e.target.value})}
-                            placeholder="Point load"
-                          />
+                  {/* Thermal Systems */}
+                  <AccordionItem value="thermal" className="border rounded-lg mb-2">
+                    <AccordionTrigger className="px-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center mr-3">
+                          🌡️
                         </div>
-                        <div>
-                          <Label htmlFor="beam-length">Length (mm)</Label>
-                          <Input
-                            id="beam-length"
-                            type="number"
-                            value={beamInputs.length}
-                            onChange={(e) => setBeamInputs({...beamInputs, length: e.target.value})}
-                            placeholder="Beam length"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="moment">I (mm⁴)</Label>
-                          <Input
-                            id="moment"
-                            type="number"
-                            value={beamInputs.momentOfInertia}
-                            onChange={(e) => setBeamInputs({...beamInputs, momentOfInertia: e.target.value})}
-                            placeholder="Moment of inertia"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateBeamDeflection} className="w-full">
-                            Calculate
-                          </Button>
+                        <div className="text-left">
+                          <h3 className="font-semibold">Advanced Thermal Systems</h3>
+                          <p className="text-sm text-muted-foreground">Heat transfer, conduction, convection, fin efficiency</p>
                         </div>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="fatigue">
-                    <AccordionTrigger className="flex items-center">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Fatigue Analysis Calculator
                     </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <Label htmlFor="max-stress">Max Stress (MPa)</Label>
-                          <Input
-                            id="max-stress"
-                            type="number"
-                            value={fatigueInputs.maxStress}
-                            onChange={(e) => setFatigueInputs({...fatigueInputs, maxStress: e.target.value})}
-                            placeholder="Maximum"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="min-stress">Min Stress (MPa)</Label>
-                          <Input
-                            id="min-stress"
-                            type="number"
-                            value={fatigueInputs.minStress}
-                            onChange={(e) => setFatigueInputs({...fatigueInputs, minStress: e.target.value})}
-                            placeholder="Minimum"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateFatigueLife} className="w-full">
-                            Analyze
-                          </Button>
+                    <AccordionContent className="px-4 space-y-4">
+                      {/* Conductive Heat Transfer */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Conductive Heat Transfer (Fourier's Law)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                          <div>
+                            <Label>k (W/m⋅K)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.thermalConductivity}
+                              onChange={(e) => setThermalInputs({...thermalInputs, thermalConductivity: e.target.value})}
+                              placeholder="200"
+                            />
+                          </div>
+                          <div>
+                            <Label>Area (m²)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.area}
+                              onChange={(e) => setThermalInputs({...thermalInputs, area: e.target.value})}
+                              placeholder="0.01"
+                            />
+                          </div>
+                          <div>
+                            <Label>Thickness (m)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.thickness}
+                              onChange={(e) => setThermalInputs({...thermalInputs, thickness: e.target.value})}
+                              placeholder="0.005"
+                            />
+                          </div>
+                          <div>
+                            <Label>ΔT (°C)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.tempDiff}
+                              onChange={(e) => setThermalInputs({...thermalInputs, tempDiff: e.target.value})}
+                              placeholder="50"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateConductiveHeatTransfer} className="w-full">
+                              Calculate Q
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
 
-                  <AccordionItem value="strain">
-                    <AccordionTrigger>
-                      Strain Calculator
-                    </AccordionTrigger>
-                    <AccordionContent className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <Label htmlFor="youngs">Young's Modulus (GPa)</Label>
-                          <Input
-                            id="youngs"
-                            type="number"
-                            value={materialInputs.youngsModulus}
-                            onChange={(e) => setMaterialInputs({...materialInputs, youngsModulus: e.target.value})}
-                            placeholder="200"
-                          />
+                      {/* Convective Heat Transfer */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Convective Heat Transfer</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                          <div>
+                            <Label>h (W/m²⋅K)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.convectionCoeff}
+                              onChange={(e) => setThermalInputs({...thermalInputs, convectionCoeff: e.target.value})}
+                              placeholder="25"
+                            />
+                          </div>
+                          <div>
+                            <Label>Surface Area (m²)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.surfaceArea}
+                              onChange={(e) => setThermalInputs({...thermalInputs, surfaceArea: e.target.value})}
+                              placeholder="0.05"
+                            />
+                          </div>
+                          <div>
+                            <Label>ΔT (°C)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.tempDiff}
+                              onChange={(e) => setThermalInputs({...thermalInputs, tempDiff: e.target.value})}
+                              placeholder="30"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateConvectiveHeatTransfer} className="w-full">
+                              Calculate Q
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <Label htmlFor="stress-input">Stress (MPa)</Label>
-                          <Input
-                            id="stress-input"
-                            type="number"
-                            value={materialInputs.stress}
-                            onChange={(e) => setMaterialInputs({...materialInputs, stress: e.target.value})}
-                            placeholder="Stress"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button onClick={calculateStrain} className="w-full">
-                            Calculate
-                          </Button>
+                      </div>
+
+                      {/* Fin Efficiency */}
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <h4 className="font-medium mb-3">Fin Efficiency</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <Label>Fin Length (m)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.finLength}
+                              onChange={(e) => setThermalInputs({...thermalInputs, finLength: e.target.value})}
+                              placeholder="0.05"
+                            />
+                          </div>
+                          <div>
+                            <Label>Fin Diameter (m)</Label>
+                            <Input
+                              type="number"
+                              value={thermalInputs.finDiameter}
+                              onChange={(e) => setThermalInputs({...thermalInputs, finDiameter: e.target.value})}
+                              placeholder="0.008"
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <Button onClick={calculateFinEfficiency} className="w-full">
+                              Calculate η_fin
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
