@@ -59,17 +59,35 @@ const Index = () => {
     {
       icon: Database,
       title: "Supplier Catalogs",
-      description: "Live links to global suppliers with downloadable specifications"
+      description: "Live links to global suppliers with downloadable specifications",
+      sources: [
+        { name: "Digi-Key", url: "https://www.digikey.com/" },
+        { name: "Mouser Electronics", url: "https://www.mouser.com/" },
+        { name: "Arrow Electronics", url: "https://www.arrow.com/" },
+        { name: "McMaster-Carr", url: "https://www.mcmaster.com/" }
+      ]
     },
     {
       icon: TrendingUp,
       title: "Live Article Feeds",
-      description: "Real-time updates from IEEE, EDN, Microwave Journal, and more"
+      description: "Real-time updates from IEEE, EDN, Microwave Journal, and more",
+      sources: [
+        { name: "IEEE Xplore", url: "https://ieeexplore.ieee.org/" },
+        { name: "EDN Network", url: "https://www.edn.com/" },
+        { name: "Microwave Journal", url: "https://www.microwavejournal.com/" },
+        { name: "RF GlobalNet", url: "https://www.rfglobalnet.com/" }
+      ]
     },
     {
       icon: Shield,
       title: "Standards Library",
-      description: "Access to IPC, ISO, JEDEC, NASA/ESA, and MIL-STD specifications"
+      description: "Access to IPC, ISO, JEDEC, NASA/ESA, and MIL-STD specifications",
+      sources: [
+        { name: "ISO Standards", url: "https://www.iso.org/standards.html" },
+        { name: "IPC Standards", url: "https://www.ipc.org/standards" },
+        { name: "JEDEC", url: "https://www.jedec.org/" },
+        { name: "NASA Standards", url: "https://standards.nasa.gov/" }
+      ]
     },
     {
       icon: Globe,
@@ -151,17 +169,38 @@ const Index = () => {
                       <CardTitle className="text-lg">{feature.title}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription>{feature.description}</CardDescription>
-                    {feature.href && (
-                      <Button asChild className="mt-4 w-full" variant="outline">
-                        <Link to={feature.href}>
-                          Access Tool
-                          <ExternalLink className="ml-2 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    )}
-                  </CardContent>
+                   <CardContent>
+                     <CardDescription>{feature.description}</CardDescription>
+                     {feature.href && (
+                       <Button asChild className="mt-4 w-full" variant="outline">
+                         <Link to={feature.href}>
+                           Access Tool
+                           <ExternalLink className="ml-2 h-4 w-4" />
+                         </Link>
+                       </Button>
+                     )}
+                     {feature.sources && (
+                       <div className="mt-4 space-y-2">
+                         <p className="text-sm font-medium text-muted-foreground">External Sources:</p>
+                         <div className="grid grid-cols-1 gap-2">
+                           {feature.sources.map((source) => (
+                             <Button
+                               key={source.name}
+                               variant="outline"
+                               size="sm"
+                               asChild
+                               className="justify-start h-8"
+                             >
+                               <a href={source.url} target="_blank" rel="noopener noreferrer">
+                                 <ExternalLink className="mr-2 h-3 w-3" />
+                                 {source.name}
+                               </a>
+                             </Button>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+                   </CardContent>
                 </Card>
               );
             })}
