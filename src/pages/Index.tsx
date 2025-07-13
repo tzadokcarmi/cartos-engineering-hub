@@ -26,7 +26,7 @@ const Index = () => {
       description: t('sector.mechanics.description'),
       icon: Cpu,
       href: "/mechanics",
-      features: ["CAD Downloads", "Stress Calculators", "Material Database", "Thermal Analysis"],
+      features: [t('feature.cad.title'), t('feature.stress.title'), t('feature.material.title'), t('feature.thermal.title')],
       color: "bg-blue-500"
     },
     {
@@ -34,7 +34,7 @@ const Index = () => {
       description: t('sector.electronics.description'),
       icon: Cpu,
       href: "/electronics", 
-      features: ["Ohm's Law Calc", "Power Analysis", "Component DB", "Standards Library"],
+      features: [t('calculator.ohm.title'), t('calculator.power.title'), t('feature.component.title'), t('feature.standardsLibrary.title')],
       color: "bg-green-500"
     },
     {
@@ -42,7 +42,7 @@ const Index = () => {
       description: t('sector.rf.description'),
       icon: Radio,
       href: "/rf",
-      features: ["S-Parameters", "VSWR Analysis", "Impedance Match", "Freq/Wavelength"],
+      features: [t('feature.sparameters.title'), t('feature.vswr.title'), t('feature.impedance.title'), t('feature.frequency.title')],
       color: "bg-purple-500"
     }
   ];

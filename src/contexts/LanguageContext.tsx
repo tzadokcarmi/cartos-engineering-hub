@@ -98,9 +98,55 @@ const translations = {
     'page.rf.title': 'RF Engineering',
     'page.rf.subtitle': 'Microwave design, S-parameters, impedance matching, and RF calculations',
     
+    // Calculator titles
+    'calculator.rf.title': 'RF Calculators',
+    'calculator.rf.subtitle': 'Essential RF and microwave engineering calculations',
+    'calculator.mechanics.title': 'Engineering Calculators',
+    'calculator.mechanics.subtitle': 'Essential mechanical engineering calculations',
+    'calculator.electronics.title': 'Electronic Calculators',
+    'calculator.electronics.subtitle': 'Essential electronic circuit calculations',
+    
+    // Calculator sections
+    'calculator.impedance.title': 'Impedance Matching Calculator',
+    'calculator.vswr.title': 'VSWR & Return Loss Calculator',
+    'calculator.frequency.title': 'Frequency ↔ Wavelength Calculator',
+    'calculator.snr.title': 'Signal-to-Noise Ratio Calculator',
+    'calculator.pathloss.title': 'Free Space Path Loss Calculator',
+    'calculator.antenna.title': 'Antenna Length Calculator',
+    
+    'calculator.fluid.title': 'Advanced Fluid Flow Calculators',
+    'calculator.structural.title': 'Structural Stress Calculators',
+    'calculator.gear.title': 'Gear & Mechanism Calculators',
+    'calculator.thermal.title': 'Thermal Systems Calculators',
+    
+    'calculator.ohm.title': 'Ohm\'s Law Calculator',
+    'calculator.divider.title': 'Voltage Divider Calculator',
+    'calculator.power.title': 'Power Dissipation Calculator',
+    'calculator.capacitive.title': 'Capacitive Reactance Calculator',
+    'calculator.inductive.title': 'Inductive Reactance Calculator',
+    'calculator.rc.title': 'RC Time Constant Calculator',
+    
+    // Features
+    'feature.cad.title': 'CAD Downloads',
+    'feature.stress.title': 'Stress Calculators',
+    'feature.material.title': 'Material Database',
+    'feature.thermal.title': 'Thermal Analysis',
+    'feature.circuit.title': 'Circuit Design',
+    'feature.pcb.title': 'PCB Layout',
+    'feature.component.title': 'Component Analysis',
+    'feature.sparameters.title': 'S-Parameters',
+    'feature.vswr.title': 'VSWR Analysis',
+    'feature.impedance.title': 'Impedance Match',
+    'feature.frequency.title': 'Freq/Wavelength',
+    
     // Recent Articles
     'articles.recent.title': 'Recent Articles',
     'articles.recent.subtitle': 'Latest insights and developments in engineering',
+    
+    // PLM Access
+    'plm.access.title': 'PLM Access',
+    'plm.access.description': 'Read-only access to Product Lifecycle Management system',
+    'plm.login': 'Login to PLM',
   },
   he: {
     // Navigation
@@ -188,9 +234,55 @@ const translations = {
     'page.rf.title': 'הנדסת רדיו תדרים',
     'page.rf.subtitle': 'עיצוב מיקרוגל, S-parameters, התאמת עכבה וחישובי RF',
     
+    // Calculator titles
+    'calculator.rf.title': 'מחשבונים רדיו תדרים',
+    'calculator.rf.subtitle': 'חישובים הנדסיים מתקדמים של רדיו ומיקרוגל',
+    'calculator.mechanics.title': 'מחשבונים הנדסיים',
+    'calculator.mechanics.subtitle': 'חישובים הנדסיים מתקדמים של מכניקה',
+    'calculator.electronics.title': 'מחשבונים אלקטרוניים',
+    'calculator.electronics.subtitle': 'חישובים הנדסיים מתקדמים של אלקטרוניקה',
+    
+    // Calculator sections
+    'calculator.impedance.title': 'מחשבון התאמת עכבה',
+    'calculator.vswr.title': 'מחשבון VSWR והפסד החזרה',
+    'calculator.frequency.title': 'מחשבון תדר ↔ אורך גל',
+    'calculator.snr.title': 'מחשבון יחס סינון לזעיר',
+    'calculator.pathloss.title': 'מחשבון הפסד מסלול חופשי במרחב',
+    'calculator.antenna.title': 'מחשבון אורך מצלמה',
+    
+    'calculator.fluid.title': 'מחשבונים זרימת נוזל מתקדמים',
+    'calculator.structural.title': 'מחשבונים מתח מבני',
+    'calculator.gear.title': 'מחשבונים גליל ומנגנון',
+    'calculator.thermal.title': 'מחשבונים מערכות חום',
+    
+    'calculator.ohm.title': 'חוק אוהם',
+    'calculator.divider.title': 'מחשבון חלון מתח',
+    'calculator.power.title': 'מחשבון הפסד נצילות',
+    'calculator.capacitive.title': 'מחשבון ריחוף קיבולי',
+    'calculator.inductive.title': 'מחשבון ריחוף אינדוקטיבי',
+    'calculator.rc.title': 'מחשבון קבוע זמן RC',
+    
+    // Features
+    'feature.cad.title': 'הורדות CAD',
+    'feature.stress.title': 'מחשבונים מתח',
+    'feature.material.title': 'מאגר חומרים',
+    'feature.thermal.title': 'ניתוח חום',
+    'feature.circuit.title': 'עיצוב מעגל',
+    'feature.pcb.title': 'פריסת PCB',
+    'feature.component.title': 'ניתוח רכיב',
+    'feature.sparameters.title': 'S-Parameters',
+    'feature.vswr.title': 'ניתוח VSWR',
+    'feature.impedance.title': 'התאמת עכבה',
+    'feature.frequency.title': 'תדר/אורך גל',
+    
     // Recent Articles
     'articles.recent.title': 'מאמרים אחרונים',
     'articles.recent.subtitle': 'תובנות והתפתחויות אחרונות בהנדסה',
+    
+    // PLM Access
+    'plm.access.title': 'גישה ל-PLM',
+    'plm.access.description': 'גישה לקריאה בלבד למערכת ניהול מחזור חיים של מוצר',
+    'plm.login': 'התחבר ל-PLM',
   }
 };
 

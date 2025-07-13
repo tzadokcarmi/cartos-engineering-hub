@@ -239,20 +239,20 @@ const RF = () => {
           <div className="lg:col-span-2">
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calculator className="mr-2 h-5 w-5" />
-                  RF Calculators
-                </CardTitle>
-                <CardDescription>
-                  Essential RF and microwave engineering calculations
-                </CardDescription>
+                              <CardTitle className="flex items-center">
+                <Calculator className="mr-2 h-5 w-5" />
+                {t('calculator.rf.title')}
+              </CardTitle>
+              <CardDescription>
+                {t('calculator.rf.subtitle')}
+              </CardDescription>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="impedance">
                     <AccordionTrigger className="flex items-center">
                       <Radio className="mr-2 h-4 w-4" />
-                      Impedance Matching Calculator
+                      {t('calculator.impedance.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -288,7 +288,7 @@ const RF = () => {
                   <AccordionItem value="vswr">
                     <AccordionTrigger className="flex items-center">
                       <Waves className="mr-2 h-4 w-4" />
-                      VSWR & Return Loss Calculator
+                      {t('calculator.vswr.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -323,7 +323,7 @@ const RF = () => {
 
                   <AccordionItem value="frequency">
                     <AccordionTrigger>
-                      Frequency ↔ Wavelength Calculator
+                      {t('calculator.frequency.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -373,7 +373,7 @@ const RF = () => {
                   <AccordionItem value="snr">
                     <AccordionTrigger className="flex items-center">
                       <Activity className="mr-2 h-4 w-4" />
-                      Signal-to-Noise Ratio Calculator
+                      {t('calculator.snr.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -409,7 +409,7 @@ const RF = () => {
                   <AccordionItem value="pathloss">
                     <AccordionTrigger className="flex items-center">
                       <Zap className="mr-2 h-4 w-4" />
-                      Free Space Path Loss Calculator
+                      {t('calculator.pathloss.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -444,7 +444,7 @@ const RF = () => {
 
                   <AccordionItem value="antenna">
                     <AccordionTrigger>
-                      Antenna Length Calculator
+                      {t('calculator.antenna.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -554,7 +554,7 @@ const RF = () => {
                   <TrendingUp className="mr-2 h-5 w-5" />
                   Recent RF Articles
                 </CardTitle>
-                <CardDescription>Live feed from RF/microwave sources</CardDescription>
+                <CardDescription>{t('articles.recent.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                  <div className="space-y-4">
@@ -606,15 +606,15 @@ const RF = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <Database className="mr-2 h-5 w-5" />
-                  PLM Access
+                  {t('plm.access.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Read-only access to Product Lifecycle Management system
+                  {t('plm.access.description')}
                 </p>
                 <Button className="w-full" variant="outline">
-                  Login to PLM
+                  {t('plm.login')}
                 </Button>
               </CardContent>
             </Card>

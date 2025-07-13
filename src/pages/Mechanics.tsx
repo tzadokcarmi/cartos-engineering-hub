@@ -338,13 +338,13 @@ const Mechanics = () => {
           <div className="lg:col-span-2">
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calculator className="mr-2 h-5 w-5" />
-                  Engineering Calculators
-                </CardTitle>
-                <CardDescription>
-                  Essential mechanical engineering calculations
-                </CardDescription>
+                              <CardTitle className="flex items-center">
+                <Calculator className="mr-2 h-5 w-5" />
+                {t('calculator.mechanics.title')}
+              </CardTitle>
+              <CardDescription>
+                {t('calculator.mechanics.subtitle')}
+              </CardDescription>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
@@ -848,7 +848,7 @@ const Mechanics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Download className="mr-2 h-5 w-5" />
-                  CAD Suppliers Database
+                  {t('feature.cad.title')} Suppliers Database
                 </CardTitle>
                 <CardDescription>
                   Global suppliers offering downloadable CAD files (STEP, IGES)
@@ -892,7 +892,7 @@ const Mechanics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <FileText className="mr-2 h-5 w-5" />
-                  Standards Library
+                  {t('feature.standardsLibrary.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -919,9 +919,9 @@ const Mechanics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <TrendingUp className="mr-2 h-5 w-5" />
-                  Recent Articles
+                  {t('articles.recent.title')}
                 </CardTitle>
-                <CardDescription>Live feed from engineering sources</CardDescription>
+                <CardDescription>{t('articles.recent.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                  <div className="space-y-4">
@@ -952,15 +952,15 @@ const Mechanics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <Database className="mr-2 h-5 w-5" />
-                  PLM Access
+                  {t('plm.access.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Read-only access to Product Lifecycle Management system
+                  {t('plm.access.description')}
                 </p>
                 <Button className="w-full" variant="outline">
-                  Login to PLM
+                  {t('plm.login')}
                 </Button>
               </CardContent>
             </Card>

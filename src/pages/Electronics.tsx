@@ -222,20 +222,20 @@ const Electronics = () => {
           <div className="lg:col-span-2">
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calculator className="mr-2 h-5 w-5" />
-                  Electronic Calculators
-                </CardTitle>
-                <CardDescription>
-                  Essential electronic circuit calculations
-                </CardDescription>
+                              <CardTitle className="flex items-center">
+                <Calculator className="mr-2 h-5 w-5" />
+                {t('calculator.electronics.title')}
+              </CardTitle>
+              <CardDescription>
+                {t('calculator.electronics.subtitle')}
+              </CardDescription>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="ohms-law">
                     <AccordionTrigger className="flex items-center">
                       <Zap className="mr-2 h-4 w-4" />
-                      Ohm's Law Calculator
+                      {t('calculator.ohm.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -288,7 +288,7 @@ const Electronics = () => {
 
                   <AccordionItem value="voltage-divider">
                     <AccordionTrigger>
-                      Voltage Divider Calculator
+                      {t('calculator.divider.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -333,7 +333,7 @@ const Electronics = () => {
 
                   <AccordionItem value="power">
                     <AccordionTrigger>
-                      Power Dissipation Calculator
+                      {t('calculator.power.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -369,7 +369,7 @@ const Electronics = () => {
                   <AccordionItem value="capacitor">
                     <AccordionTrigger className="flex items-center">
                       <Activity className="mr-2 h-4 w-4" />
-                      Capacitive Reactance Calculator
+                      {t('calculator.capacitive.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -405,7 +405,7 @@ const Electronics = () => {
                   <AccordionItem value="inductor">
                     <AccordionTrigger className="flex items-center">
                       <Settings className="mr-2 h-4 w-4" />
-                      Inductive Reactance Calculator
+                      {t('calculator.inductive.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -440,7 +440,7 @@ const Electronics = () => {
 
                   <AccordionItem value="rc-time">
                     <AccordionTrigger>
-                      RC Time Constant Calculator
+                      {t('calculator.rc.title')}
                     </AccordionTrigger>
                     <AccordionContent className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -548,9 +548,9 @@ const Electronics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <TrendingUp className="mr-2 h-5 w-5" />
-                  Recent Articles
+                  {t('articles.recent.title')}
                 </CardTitle>
-                <CardDescription>Live feed from electronic sources</CardDescription>
+                <CardDescription>{t('articles.recent.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                  <div className="space-y-4">
@@ -581,15 +581,15 @@ const Electronics = () => {
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <Database className="mr-2 h-5 w-5" />
-                  PLM Access
+                  {t('plm.access.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Read-only access to Product Lifecycle Management system
+                  {t('plm.access.description')}
                 </p>
                 <Button className="w-full" variant="outline">
-                  Login to PLM
+                  {t('plm.login')}
                 </Button>
               </CardContent>
             </Card>

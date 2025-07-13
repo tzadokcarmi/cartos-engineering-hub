@@ -109,11 +109,13 @@ All colors MUST be HSL.
   }
 
   [dir="rtl"] .ml-2 {
-    @apply mr-2 ml-0;
+    margin-right: 0.5rem;
+    margin-left: 0;
   }
 
   [dir="rtl"] .mr-2 {
-    @apply ml-2 mr-0;
+    margin-left: 0.5rem;
+    margin-right: 0;
   }
 
   [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
@@ -129,10 +131,10 @@ All colors MUST be HSL.
   }
 
   [dir="rtl"] .text-left {
-    @apply text-right;
+    text-align: right;
   }
 
   [dir="rtl"] .text-right {
-    @apply text-left;
+    text-align: left;
   }
 }
