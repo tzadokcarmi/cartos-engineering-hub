@@ -21,8 +21,10 @@ import {
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Mechanics = () => {
+  const { t } = useLanguage();
   // Fluid Flow Calculator States
   const [fluidInputs, setFluidInputs] = useState({ 
     density: '', velocity: '', diameter: '', viscosity: '', roughness: '', length: '', flowRate: ''
@@ -325,9 +327,9 @@ const Mechanics = () => {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Mechanics Engineering</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('page.mechanics.title')}</h1>
           <p className="text-muted-foreground">
-            CAD resources, mechanical calculations, and design standards for precision engineering
+            {t('page.mechanics.subtitle')}
           </p>
         </div>
 

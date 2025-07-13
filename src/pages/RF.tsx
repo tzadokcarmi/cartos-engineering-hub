@@ -20,8 +20,10 @@ import {
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const RF = () => {
+  const { t } = useLanguage();
   const [impedanceInputs, setImpedanceInputs] = useState({ z1: '', z2: '' });
   const [vswriteInputs, setVswriteInputs] = useState({ forward: '', reflected: '' });
   const [frequencyInputs, setFrequencyInputs] = useState({ frequency: '', wavelength: '' });
@@ -226,9 +228,9 @@ const RF = () => {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">RF Engineering</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('page.rf.title')}</h1>
           <p className="text-muted-foreground">
-            Microwave design, S-parameters, impedance matching, and RF calculations
+            {t('page.rf.subtitle')}
           </p>
         </div>
 

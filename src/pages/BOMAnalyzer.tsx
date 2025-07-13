@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BOMItem {
   id: string;
@@ -41,6 +42,7 @@ interface Alternative {
 }
 
 const BOMAnalyzer = () => {
+  const { t } = useLanguage();
   const [bomData, setBomData] = useState<BOMItem[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -201,9 +203,9 @@ const BOMAnalyzer = () => {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">BOM Analyzer & Part Replacement</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('bom.title')}</h1>
           <p className="text-muted-foreground">
-            Upload your Bill of Materials for comprehensive analysis and part replacement suggestions
+            {t('bom.subtitle')}
           </p>
         </div>
 

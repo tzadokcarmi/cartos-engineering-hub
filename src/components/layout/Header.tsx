@@ -30,7 +30,7 @@ const Header = () => {
               <Zap className="h-4 w-4" />
             </div>
             <span className="font-bold text-lg hidden sm:inline-block">
-              CGM Engineering Portal
+              {t('company.portal')}
             </span>
           </Link>
         </div>

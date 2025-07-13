@@ -30,6 +30,10 @@ const translations = {
     'home.quickAccess.title': 'Quick Access',
     'home.quickAccess.subtitle': 'Jump straight to your most used tools and resources',
     
+    // Company name
+    'company.name': 'Cartos General Microwave',
+    'company.portal': 'CGM Engineering Portal',
+    
     // Sectors
     'sector.mechanics.title': 'Mechanical Engineering',
     'sector.mechanics.description': 'Advanced tools for design, analysis, and manufacturing',
@@ -66,6 +70,34 @@ const translations = {
     'button.openCalculator': 'Open Calculator',
     'button.searchDatasheets': 'Search Datasheets',
     
+    // BOM Analyzer
+    'bom.title': 'BOM Analyzer & Part Replacement',
+    'bom.subtitle': 'Upload your Bill of Materials for comprehensive analysis and part replacement suggestions',
+    'bom.upload.title': 'Upload BOM File',
+    'bom.upload.description': 'Supported formats: CSV, Excel (.xlsx, .xls), or TXT files',
+    'bom.upload.dropText': 'Drop your BOM file here or click to browse',
+    'bom.upload.formats': 'CSV, Excel, or TXT formats accepted',
+    'bom.upload.selectFile': 'Select File',
+    'bom.analyze': 'Analyze BOM',
+    'bom.analyzing': 'Analyzing...',
+    'bom.results.title': 'Analysis Results',
+    'bom.results.description': 'Component analysis with manufacturer info and replacement suggestions',
+    'bom.export': 'Export Results',
+    'bom.help.title': 'How to Use BOM Analyzer',
+    'bom.stats.total': 'Total Components',
+    'bom.stats.active': 'Active Parts',
+    'bom.stats.eol': 'EOL Parts',
+    'bom.stats.nrnd': 'NRND Parts',
+    'bom.alternatives.title': 'Recommended Alternatives',
+    
+    // Page titles
+    'page.mechanics.title': 'Mechanical Engineering',
+    'page.mechanics.subtitle': 'Advanced tools for design, analysis, and manufacturing',
+    'page.electronics.title': 'Electronics Engineering',
+    'page.electronics.subtitle': 'Circuit analysis, component databases, and electronic design resources',
+    'page.rf.title': 'RF Engineering',
+    'page.rf.subtitle': 'Microwave design, S-parameters, impedance matching, and RF calculations',
+    
     // Recent Articles
     'articles.recent.title': 'Recent Articles',
     'articles.recent.subtitle': 'Latest insights and developments in engineering',
@@ -87,6 +119,10 @@ const translations = {
     'home.features.subtitle': 'כלים עוצמתיים לשיפור זרימת העבודה ההנדסית שלך',
     'home.quickAccess.title': 'גישה מהירה',
     'home.quickAccess.subtitle': 'קפוץ ישירות לכלים והמשאבים הכי בשימוש שלך',
+    
+    // Company name
+    'company.name': 'קרטוס ג'נרל מיקרוויב',
+    'company.portal': 'פורטל הנדסי CGM',
     
     // Sectors
     'sector.mechanics.title': 'הנדסת מכונות',
@@ -123,6 +159,34 @@ const translations = {
     'button.accessStandards': 'גש לתקנים',
     'button.openCalculator': 'פתח מחשבון',
     'button.searchDatasheets': 'חפש דפי נתונים',
+    
+    // BOM Analyzer
+    'bom.title': 'מנתח רכיבים והחלפת חלקים',
+    'bom.subtitle': 'העלה את רשימת החומרים שלך לניתוח מקיף והצעות להחלפת חלקים',
+    'bom.upload.title': 'העלאת קובץ BOM',
+    'bom.upload.description': 'פורמטים נתמכים: CSV, Excel (.xlsx, .xls), או קבצי TXT',
+    'bom.upload.dropText': 'גרור את קובץ ה-BOM לכאן או לחץ לגלישה',
+    'bom.upload.formats': 'פורמטים CSV, Excel או TXT מתקבלים',
+    'bom.upload.selectFile': 'בחר קובץ',
+    'bom.analyze': 'נתח BOM',
+    'bom.analyzing': 'מנתח...',
+    'bom.results.title': 'תוצאות הניתוח',
+    'bom.results.description': 'ניתוח רכיבים עם מידע על היצרן והצעות להחלפה',
+    'bom.export': 'ייצא תוצאות',
+    'bom.help.title': 'איך להשתמש במנתח BOM',
+    'bom.stats.total': 'סה"כ רכיבים',
+    'bom.stats.active': 'חלקים פעילים',
+    'bom.stats.eol': 'חלקי EOL',
+    'bom.stats.nrnd': 'חלקי NRND',
+    'bom.alternatives.title': 'חלופות מומלצות',
+    
+    // Page titles
+    'page.mechanics.title': 'הנדסת מכונות',
+    'page.mechanics.subtitle': 'כלים מתקדמים לעיצוב, ניתוח וייצור',
+    'page.electronics.title': 'הנדסת אלקטרוניקה',
+    'page.electronics.subtitle': 'ניתוח מעגלים, מאגרי רכיבים ומשאבי עיצוב אלקטרוני',
+    'page.rf.title': 'הנדסת רדיו תדרים',
+    'page.rf.subtitle': 'עיצוב מיקרוגל, S-parameters, התאמת עכבה וחישובי RF',
     
     // Recent Articles
     'articles.recent.title': 'מאמרים אחרונים',

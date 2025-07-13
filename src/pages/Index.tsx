@@ -107,7 +107,7 @@ const Index = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Cartos General Microwave
+            {t('company.name')}
           </h1>
           <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
             {t('home.title')}
