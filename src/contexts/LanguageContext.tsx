@@ -121,7 +121,7 @@ const translations = {
     'home.quickAccess.subtitle': 'קפוץ ישירות לכלים והמשאבים הכי בשימוש שלך',
     
     // Company name
-    'company.name': 'קרטוס ג'נרל מיקרוויב',
+    'company.name': 'קרטוס ג׳נרל מיקרוויב',
     'company.portal': 'פורטל הנדסי CGM',
     
     // Sectors
