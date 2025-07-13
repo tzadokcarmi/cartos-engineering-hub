@@ -80,31 +80,36 @@ const RF = () => {
       title: "5G mmWave Antenna Design", 
       source: "Microwave Journal", 
       time: "30 min ago",
-      summary: "Latest advances in 28GHz and 39GHz antenna arrays for massive MIMO applications, including beamforming algorithms and thermal management solutions."
+      summary: "Latest advances in 28GHz and 39GHz antenna arrays for massive MIMO applications, including beamforming algorithms and thermal management solutions.",
+      url: "https://www.microwavejournal.com/articles/38742-5g-mmwave-antenna-design-challenges-and-solutions"
     },
     { 
       title: "GaN Power Amplifier Efficiency", 
       source: "RF Design", 
       time: "2 hours ago",
-      summary: "Breakthrough GaN-on-SiC PA technology achieving 70% efficiency at 3.5GHz with digital pre-distortion for 5G base stations."
+      summary: "Breakthrough GaN-on-SiC PA technology achieving 70% efficiency at 3.5GHz with digital pre-distortion for 5G base stations.",
+      url: "https://www.rfdesignworld.com/articles/18765-gan-power-amplifier-technology-trends"
     },
     { 
       title: "Phased Array Beamforming", 
       source: "IEEE Microwave Magazine", 
       time: "4 hours ago",
-      summary: "Advanced beamforming techniques for satellite communications using 64-element arrays with sub-degree pointing accuracy."
+      summary: "Advanced beamforming techniques for satellite communications using 64-element arrays with sub-degree pointing accuracy.",
+      url: "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6668"
     },
     { 
       title: "RF Filter Design Techniques", 
       source: "All About Circuits", 
       time: "6 hours ago",
-      summary: "Comparison of BAW vs SAW filter technologies for 5G applications, including insertion loss and spurious response analysis."
+      summary: "Comparison of BAW vs SAW filter technologies for 5G applications, including insertion loss and spurious response analysis.",
+      url: "https://www.allaboutcircuits.com/technical-articles/rf-filter-design-techniques/"
     },
     { 
       title: "Satellite Communication Trends", 
       source: "Via Satellite", 
       time: "8 hours ago",
-      summary: "LEO constellation growth driving demand for Ka-band and V-band components with improved phase noise performance."
+      summary: "LEO constellation growth driving demand for Ka-band and V-band components with improved phase noise performance.",
+      url: "https://www.satellitetoday.com/technology/"
     }
   ];
 
@@ -550,19 +555,26 @@ const RF = () => {
                 <CardDescription>Live feed from RF/microwave sources</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentArticles.map((article, index) => (
-                    <div key={index} className="space-y-2">
-                      <h5 className="font-medium text-sm leading-tight">{article.title}</h5>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span>{article.source}</span>
-                        <span>{article.time}</span>
-                      </div>
-                      {index < recentArticles.length - 1 && <Separator className="mt-3" />}
-                    </div>
-                  ))}
-                </div>
+                 <div className="space-y-4">
+                   {recentArticles.map((article, index) => (
+                     <div key={index} className="space-y-2">
+                       <div className="flex justify-between items-start gap-2">
+                         <h5 className="font-medium text-sm leading-tight flex-1">{article.title}</h5>
+                         <Button size="sm" variant="ghost" asChild className="h-6 px-2 shrink-0">
+                           <a href={article.url} target="_blank" rel="noopener noreferrer">
+                             <ExternalLink className="h-3 w-3" />
+                           </a>
+                         </Button>
+                       </div>
+                       <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
+                       <div className="flex justify-between items-center text-xs text-muted-foreground">
+                         <span>{article.source}</span>
+                         <span>{article.time}</span>
+                       </div>
+                       {index < recentArticles.length - 1 && <Separator className="mt-3" />}
+                     </div>
+                   ))}
+                 </div>
               </CardContent>
             </Card>
 
