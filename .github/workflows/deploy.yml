@@ -34,18 +34,13 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Copy files to root
-        run: |
-          cp -r dist/* .
-          cp dist/.nojekyll . || true
-      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './dist'
 
   deploy:
     environment:
