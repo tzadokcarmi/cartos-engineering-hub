@@ -97,31 +97,36 @@ const Mechanics = () => {
       title: "Advanced Materials in Aerospace Applications", 
       source: "NASA Technical Reports", 
       time: "2 hours ago",
-      summary: "Revolutionary carbon nanotube-reinforced composites achieving 40% weight reduction while maintaining structural integrity in extreme temperatures."
+      summary: "Revolutionary carbon nanotube-reinforced composites achieving 40% weight reduction while maintaining structural integrity in extreme temperatures.",
+      url: "https://ntrs.nasa.gov/search/results/?utf8=%E2%9C%93&affiliate=nasa&query=carbon+nanotube+composites"
     },
     { 
       title: "Finite Element Analysis Best Practices", 
       source: "Engineering.com", 
       time: "4 hours ago",
-      summary: "Mesh optimization techniques and convergence studies for complex geometries, including adaptive refinement and error estimation methods."
+      summary: "Mesh optimization techniques and convergence studies for complex geometries, including adaptive refinement and error estimation methods.",
+      url: "https://www.engineering.com/story/finite-element-analysis-best-practices"
     },
     { 
       title: "Additive Manufacturing Design Guidelines", 
       source: "ASME Journal", 
       time: "6 hours ago",
-      summary: "Design for AM principles including support structures, surface finish optimization, and post-processing considerations for metal 3D printing."
+      summary: "Design for AM principles including support structures, surface finish optimization, and post-processing considerations for metal 3D printing.",
+      url: "https://asmedigitalcollection.asme.org/mechanicaldesign"
     },
     { 
       title: "Fatigue Analysis in Critical Components", 
       source: "Materials Science", 
       time: "8 hours ago",
-      summary: "Paris law applications and crack propagation modeling in high-cycle fatigue scenarios with probabilistic failure analysis."
+      summary: "Paris law applications and crack propagation modeling in high-cycle fatigue scenarios with probabilistic failure analysis.",
+      url: "https://www.sciencedirect.com/topics/engineering/fatigue-analysis"
     },
     { 
       title: "Thermal Management in Electronic Enclosures", 
       source: "Design News", 
       time: "12 hours ago",
-      summary: "Heat sink design optimization using topology optimization and advanced cooling techniques for high-power density applications."
+      summary: "Heat sink design optimization using topology optimization and advanced cooling techniques for high-power density applications.",
+      url: "https://www.designnews.com/electronics-test/thermal-management"
     }
   ];
 
@@ -917,17 +922,24 @@ const Mechanics = () => {
                 <CardDescription>Live feed from engineering sources</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentArticles.map((article, index) => (
-                    <div key={index} className="space-y-2">
-                      <h5 className="font-medium text-sm leading-tight">{article.title}</h5>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span>{article.source}</span>
-                        <span>{article.time}</span>
-                      </div>
-                      {index < recentArticles.length - 1 && <Separator className="mt-3" />}
-                    </div>
+                 <div className="space-y-4">
+                   {recentArticles.map((article, index) => (
+                     <div key={index} className="space-y-2">
+                       <div className="flex justify-between items-start gap-2">
+                         <h5 className="font-medium text-sm leading-tight flex-1">{article.title}</h5>
+                         <Button size="sm" variant="ghost" asChild className="h-6 px-2 shrink-0">
+                           <a href={article.url} target="_blank" rel="noopener noreferrer">
+                             <ExternalLink className="h-3 w-3" />
+                           </a>
+                         </Button>
+                       </div>
+                       <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
+                       <div className="flex justify-between items-center text-xs text-muted-foreground">
+                         <span>{article.source}</span>
+                         <span>{article.time}</span>
+                       </div>
+                       {index < recentArticles.length - 1 && <Separator className="mt-3" />}
+                     </div>
                   ))}
                 </div>
               </CardContent>

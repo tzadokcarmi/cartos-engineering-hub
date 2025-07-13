@@ -80,31 +80,36 @@ const Electronics = () => {
       title: "Next-Gen Power Management ICs", 
       source: "EDN", 
       time: "1 hour ago",
-      summary: "Revolutionary PMICs with 95% efficiency and integrated AI-driven load balancing for automotive and industrial applications."
+      summary: "Revolutionary PMICs with 95% efficiency and integrated AI-driven load balancing for automotive and industrial applications.",
+      url: "https://www.edn.com/power-management-ic-trends/"
     },
     { 
       title: "5G RF Circuit Design Challenges", 
       source: "Microwave Journal", 
       time: "3 hours ago",
-      summary: "Overcoming thermal and linearity challenges in 5G millimeter-wave front-end modules using advanced GaN technology."
+      summary: "Overcoming thermal and linearity challenges in 5G millimeter-wave front-end modules using advanced GaN technology.",
+      url: "https://www.microwavejournal.com/articles/38741-5g-rf-circuit-design-challenges"
     },
     { 
       title: "Advanced PCB Layout Techniques", 
       source: "All About Circuits", 
       time: "5 hours ago",
-      summary: "Best practices for high-speed digital design including via stitching, layer stackup optimization, and crosstalk mitigation."
+      summary: "Best practices for high-speed digital design including via stitching, layer stackup optimization, and crosstalk mitigation.",
+      url: "https://www.allaboutcircuits.com/technical-articles/advanced-pcb-layout-techniques/"
     },
     { 
       title: "EMC/EMI Design Guidelines", 
       source: "IEEE Spectrum", 
       time: "7 hours ago",
-      summary: "New approaches to electromagnetic compatibility in dense electronics using metamaterial shielding and active filtering."
+      summary: "New approaches to electromagnetic compatibility in dense electronics using metamaterial shielding and active filtering.",
+      url: "https://spectrum.ieee.org/emc-emi-design-guidelines"
     },
     { 
       title: "SiC and GaN Power Devices", 
       source: "Power Electronics News", 
       time: "10 hours ago",
-      summary: "Comparative analysis of Silicon Carbide vs Gallium Nitride for high-voltage, high-frequency power conversion applications."
+      summary: "Comparative analysis of Silicon Carbide vs Gallium Nitride for high-voltage, high-frequency power conversion applications.",
+      url: "https://www.powerelectronicsnews.com/sic-gan-power-devices/"
     }
   ];
 
@@ -546,17 +551,24 @@ const Electronics = () => {
                 <CardDescription>Live feed from electronic sources</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentArticles.map((article, index) => (
-                    <div key={index} className="space-y-2">
-                      <h5 className="font-medium text-sm leading-tight">{article.title}</h5>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
-                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span>{article.source}</span>
-                        <span>{article.time}</span>
-                      </div>
-                      {index < recentArticles.length - 1 && <Separator className="mt-3" />}
-                    </div>
+                 <div className="space-y-4">
+                   {recentArticles.map((article, index) => (
+                     <div key={index} className="space-y-2">
+                       <div className="flex justify-between items-start gap-2">
+                         <h5 className="font-medium text-sm leading-tight flex-1">{article.title}</h5>
+                         <Button size="sm" variant="ghost" asChild className="h-6 px-2 shrink-0">
+                           <a href={article.url} target="_blank" rel="noopener noreferrer">
+                             <ExternalLink className="h-3 w-3" />
+                           </a>
+                         </Button>
+                       </div>
+                       <p className="text-xs text-muted-foreground leading-relaxed">{article.summary}</p>
+                       <div className="flex justify-between items-center text-xs text-muted-foreground">
+                         <span>{article.source}</span>
+                         <span>{article.time}</span>
+                       </div>
+                       {index < recentArticles.length - 1 && <Separator className="mt-3" />}
+                     </div>
                   ))}
                 </div>
               </CardContent>
