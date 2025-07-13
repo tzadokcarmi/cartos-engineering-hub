@@ -102,4 +102,37 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="rtl"] .ml-2 {
+    @apply mr-2 ml-0;
+  }
+
+  [dir="rtl"] .mr-2 {
+    @apply ml-2 mr-0;
+  }
+
+  [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  [dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  [dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+  }
+
+  [dir="rtl"] .text-left {
+    @apply text-right;
+  }
+
+  [dir="rtl"] .text-right {
+    @apply text-left;
+  }
 }

@@ -2,20 +2,23 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { Zap, Cpu, Radio, FileText, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const navigation = [
-    { name: "Dashboard", href: "/", icon: Zap },
-    { name: "Mechanics", href: "/mechanics", icon: Cpu },
-    { name: "Electronics", href: "/electronics", icon: Cpu },
-    { name: "RF Engineering", href: "/rf", icon: Radio },
-    { name: "BOM Analyzer", href: "/bom-analyzer", icon: FileText },
+    { name: t('nav.home'), href: "/", icon: Zap },
+    { name: t('nav.mechanics'), href: "/mechanics", icon: Cpu },
+    { name: t('nav.electronics'), href: "/electronics", icon: Cpu },
+    { name: t('nav.rf'), href: "/rf", icon: Radio },
+    { name: t('nav.bomAnalyzer'), href: "/bom-analyzer", icon: FileText },
   ];
 
   return (
@@ -60,6 +63,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-2">
+          <LanguageToggle />
           <ModeToggle />
           
           {/* Mobile Menu Button */}

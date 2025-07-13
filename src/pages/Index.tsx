@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { 
   Cpu, 
   Radio, 
@@ -17,26 +18,28 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const { t } = useLanguage();
+  
   const sectors = [
     {
-      title: "Mechanics",
-      description: "CAD files, stress analysis, material properties, and mechanical design tools",
+      title: t('sector.mechanics.title'),
+      description: t('sector.mechanics.description'),
       icon: Cpu,
       href: "/mechanics",
       features: ["CAD Downloads", "Stress Calculators", "Material Database", "Thermal Analysis"],
       color: "bg-blue-500"
     },
     {
-      title: "Electronics",
-      description: "Circuit analysis, component databases, and electronic design resources",
+      title: t('sector.electronics.title'),
+      description: t('sector.electronics.description'),
       icon: Cpu,
       href: "/electronics", 
       features: ["Ohm's Law Calc", "Power Analysis", "Component DB", "Standards Library"],
       color: "bg-green-500"
     },
     {
-      title: "RF Engineering",
-      description: "Microwave design, S-parameters, impedance matching, and RF calculations",
+      title: t('sector.rf.title'),
+      description: t('sector.rf.description'),
       icon: Radio,
       href: "/rf",
       features: ["S-Parameters", "VSWR Analysis", "Impedance Match", "Freq/Wavelength"],
@@ -47,8 +50,8 @@ const Index = () => {
   const keyFeatures = [
     {
       icon: FileText,
-      title: "BOM Analyzer",
-      description: "Upload and analyze Bills of Materials with part replacement suggestions",
+      title: t('feature.bomAnalyzer.title'),
+      description: t('feature.bomAnalyzer.description'),
       href: "/bom-analyzer"
     },
     {
@@ -58,8 +61,8 @@ const Index = () => {
     },
     {
       icon: Database,
-      title: "Supplier Catalogs",
-      description: "Live links to global suppliers with downloadable specifications",
+      title: t('feature.supplierCatalogs.title'),
+      description: t('feature.supplierCatalogs.description'),
       sources: [
         { name: "Digi-Key", url: "https://www.digikey.com/" },
         { name: "Mouser Electronics", url: "https://www.mouser.com/" },
@@ -69,8 +72,8 @@ const Index = () => {
     },
     {
       icon: TrendingUp,
-      title: "Live Article Feeds",
-      description: "Real-time updates from IEEE, EDN, Microwave Journal, and more",
+      title: t('feature.liveFeeds.title'),
+      description: t('feature.liveFeeds.description'),
       sources: [
         { name: "IEEE Xplore", url: "https://ieeexplore.ieee.org/" },
         { name: "EDN Network", url: "https://www.edn.com/" },
@@ -80,8 +83,8 @@ const Index = () => {
     },
     {
       icon: Shield,
-      title: "Standards Library",
-      description: "Access to IPC, ISO, JEDEC, NASA/ESA, and MIL-STD specifications",
+      title: t('feature.standardsLibrary.title'),
+      description: t('feature.standardsLibrary.description'),
       sources: [
         { name: "ISO Standards", url: "https://www.iso.org/standards.html" },
         { name: "IPC Standards", url: "https://www.ipc.org/standards" },
@@ -107,17 +110,16 @@ const Index = () => {
             Cartos General Microwave
           </h1>
           <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
-            Engineering Portal
+            {t('home.title')}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Your comprehensive engineering resource hub for mechanics, electronics, and RF design. 
-            Access calculators, supplier catalogs, standards, and advanced BOM analysis tools.
+            {t('home.subtitle')}
           </p>
         </div>
 
         {/* Engineering Sectors */}
         <section className="mb-12">
-          <h3 className="text-2xl font-bold mb-6 text-center">Engineering Sectors</h3>
+          <h3 className="text-2xl font-bold mb-6 text-center">{t('home.sectors.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {sectors.map((sector) => {
               const Icon = sector.icon;
@@ -144,7 +146,7 @@ const Index = () => {
                     </div>
                     <Button asChild className="w-full">
                       <Link to={sector.href}>
-                        Enter {sector.title}
+                        {t('button.explore')} {sector.title}
                         <ExternalLink className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -157,7 +159,7 @@ const Index = () => {
 
         {/* Key Features */}
         <section className="mb-12">
-          <h3 className="text-2xl font-bold mb-6 text-center">Key Features</h3>
+          <h3 className="text-2xl font-bold mb-6 text-center">{t('home.features.title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {keyFeatures.map((feature) => {
               const Icon = feature.icon;
@@ -211,9 +213,9 @@ const Index = () => {
         <section className="text-center">
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
-              <CardTitle className="text-xl">Quick Access</CardTitle>
+              <CardTitle className="text-xl">{t('home.quickAccess.title')}</CardTitle>
               <CardDescription>
-                Jump directly to frequently used tools and resources
+                {t('home.quickAccess.subtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -221,13 +223,13 @@ const Index = () => {
                 <Button asChild variant="outline">
                   <Link to="/bom-analyzer">
                     <FileText className="mr-2 h-4 w-4" />
-                    BOM Analyzer
+                    {t('quickAccess.bomAnalyzer.title')}
                   </Link>
                 </Button>
                 <Button asChild variant="outline">
                   <Link to="/mechanics">
                     <Calculator className="mr-2 h-4 w-4" />
-                    Calculators
+                    {t('quickAccess.calculators.title')}
                   </Link>
                 </Button>
                 <Button asChild variant="outline">
