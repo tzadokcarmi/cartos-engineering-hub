@@ -109,13 +109,13 @@ All colors MUST be HSL.
   }
 
   [dir="rtl"] .ml-2 {
-    margin-right: 0.5rem;
-    margin-left: 0;
+    margin-right: 0.5rem !important;
+    margin-left: 0 !important;
   }
 
   [dir="rtl"] .mr-2 {
-    margin-left: 0.5rem;
-    margin-right: 0;
+    margin-left: 0.5rem !important;
+    margin-right: 0 !important;
   }
 
   [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
